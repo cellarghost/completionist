@@ -1,0 +1,52 @@
+
+Next Steps:
+
+1 - Add TestData to Context and set up a reducer
+2 - Add a togglable description view for each task
+3 - Allow users to add new tasks 
+4 - 
+
+---------------------------------------------------
+
+Components:
+
+- App
+    - Timeline
+        - Task 
+            - TaskEditor 
+    - Controls
+    - TaskView
+
+Timeline:
+- When paused, the timeline can be edited
+- New tasks can be added, existing tasks can be edited 
+
+All tasks are connected via a timeline visual 
+
+JSON structure:
+
+{
+    user: {
+        playing: false
+        progress_ms: 0
+        currentTask: 0
+        currentTaskProgress:
+    },
+
+    tasks: {
+        1: {
+            taskid: 1
+            title: "task 1"
+            duration: "30000"
+            hasSubtasks: true
+            subTasks: [2, 3]
+        }
+        
+    }
+
+    timeline: {
+        0: {
+            taskid: 1
+        }
+    }
+}
