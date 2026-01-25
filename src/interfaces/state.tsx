@@ -10,10 +10,12 @@ export interface TaskMap {
 }
 
 export interface Task {
+    id: number
     title: string
     duration_ms: number
     hasSubtasks: boolean
     subTasks?: number[]
+    completed: boolean
 }
 
 export interface TaskProgress {
@@ -22,12 +24,30 @@ export interface TaskProgress {
     completed: boolean
 }
 
-export interface Timeline {
-    [id: number]: TaskProgress
-}
+// export interface Timeline {
+//     [id: number]: TaskProgress
+// }
 
 export interface ProgramState {
     user: UserState
     taskMap: TaskMap 
-    timeline: Timeline 
+    timeline: number[]
+}
+
+export interface Context {
+    state: ProgramState,
+    dispatch: Function
+    getNextID: Function
+}
+
+export type Action =
+  | { type: "ADD_TASK"; payload: Task }
+  | { type: "REMOVE_TASK"; payload: number }
+  | { type: "UPDATE_TASK"; payload: Task };
+
+export interface TaskEditorProperties {
+    isNew: boolean | null,
+    id: number | null,
+    title: string | null,
+    duration_ms: number | null
 }

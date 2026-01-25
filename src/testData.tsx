@@ -9,26 +9,19 @@ export const testData: ProgramState = {
     },
     taskMap: {
         0: {
+            id: 0,
             title: "Task 1",
             duration_ms: 120000,
-            hasSubtasks: false
+            hasSubtasks: false,
+            completed: false
         },
         1: {
+            id: 1,
             title: "Task 2",
             duration_ms: 120000,
-            hasSubtasks: false
+            hasSubtasks: false,
+            completed: false
         }
     },
-    timeline: {
-        0: {
-            taskID: 0,
-            inProgress: false,
-            completed: false
-        },
-        1: {
-            taskID: 1,
-            inProgress: false,
-            completed: false
-        }
-    }
+    timeline: [0, 1]
 }

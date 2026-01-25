@@ -1,3 +1,10 @@
+TODO: 25th Jan
+1. Fix Time (convert from ms to hours, minutes and seconds)
+2. Add subtasks -- bullet point subtasks
+3. Drag and drop reordering
+
+
+------------------------------------------------
 
 Next Steps:
 
