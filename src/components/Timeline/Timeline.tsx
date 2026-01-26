@@ -74,8 +74,9 @@ export default function Timeline() {
                         
                         return (
                             <>
-                                <DropTask pos={id} />
-                                <TaskBox task={programState.taskMap[taskID]} handleOpenTaskEdit={handleOpenTaskEdit} pos={id}/>
+                                <DropTask pos={id}>
+                                    <TaskBox task={programState.taskMap[taskID]} handleOpenTaskEdit={handleOpenTaskEdit} pos={id}/>
+                                </DropTask>
                             </>
                         )
                     })}

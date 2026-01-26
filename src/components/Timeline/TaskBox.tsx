@@ -26,7 +26,8 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos }: { task: Task,
 
     const {state, dispatch, } = useContext(StateContext);
 
-    const handleDelete = () => {
+    const handleDelete = (ev: MouseEvent) => {
+        ev.stopPropagation();
         console.log('[handleDelete]: ', task)
         console.log('[state]', state)
         try {
@@ -41,42 +42,56 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos }: { task: Task,
         }
     }
 
-    const handleEditTask = () => {
+    const handleEditTask = (ev: MouseEvent) => {
+        ev.stopPropagation();
         handleOpenTaskEdit(false, task.id)
     }
 
     return (
-        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
+        <div ref={setNodeRef} style={style}>
             <Box sx={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 bgcolor: 'rgba(142, 105, 121, 1)',
                 padding: '0.5rem',
                 borderRadius: '0.4rem',
                 color: "white",
             }}
             >
+                <div {...listeners} {...attributes} className="drag-handle"
+                style={{
+                    fontSize: 24
+                }}
+                >
+                    ⠿
+                </div>
                 <Box sx={{
                     display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    justifySelf: 'end'
+                    flexDirection: "column",
+                    width: '100%'
                 }}>
-                    <h2>{task.title}</h2>
-                    <Box>
-                        <IconButton onClick={handleEditTask}>
-                            <EditIcon 
-                                sx={{justifySelf: 'end'}}
-                            />
-                        </IconButton>
-                        <IconButton onClick={handleDelete}>
-                            <DeleteIcon 
-                                sx={{justifySelf: 'end'}}
-                            />
-                        </IconButton>
+                    <Box sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        flexWrap: 'nowrap'
+                    }}>
+                        <h2>{task.title}</h2>
+                        <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
+                            <IconButton onClick={handleEditTask}>
+                                <EditIcon 
+                                    sx={{justifySelf: 'end'}}
+                                />
+                            </IconButton>
+                            <IconButton onClick={handleDelete}>
+                                <DeleteIcon 
+                                    sx={{justifySelf: 'end'}}
+                                />
+                            </IconButton>
+                        </Box>
                     </Box>
+                    <h3>{dayjs.duration(task.duration_ms).format("HH:mm:ss")}</h3>
                 </Box>
-                <h3>Duration: {dayjs.duration(task.duration_ms).format("HH:mm:ss")}</h3>
             </Box>
         </div>
     )
