@@ -9,6 +9,7 @@ import type { Task, TaskEditorProperties } from "../../interfaces/state";
 import TaskEdit from "./TaskEdit";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import DropTask from "./DropTask";
+import { motion } from "motion/react";
 
 export default function Timeline() {
 
@@ -73,11 +74,11 @@ export default function Timeline() {
                         const taskID: number = programState.timeline[id];
                         
                         return (
-                            <>
+                            <motion.div key={taskID} layout transition={{duration: 0.25}}>
                                 <DropTask pos={id}>
                                     <TaskBox task={programState.taskMap[taskID]} handleOpenTaskEdit={handleOpenTaskEdit} pos={id}/>
                                 </DropTask>
-                            </>
+                            </motion.div>
                         )
                     })}
                 </Box>

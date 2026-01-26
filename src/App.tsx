@@ -80,7 +80,7 @@ function App() {
       <StateContext.Provider value={{state: programState, dispatch: dispatch, getNextID: getNextID}}>
         <Box sx={{
           border: "3px solid blue",
-          minWidth: "15vw",
+          minWidth: "20vw",
           minHeight: "50vh",
           padding: "1rem"
           }}>
