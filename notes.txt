@@ -1,10 +1,16 @@
 TODO: 26th Jan 
 
-1. Fix drag and drop ordering:
+1. Make tasks collapsable
+    - Each tasks takes up a large space on the screen. 
+        Change the font to be smaller
+        Add a dropdown arrow to allow the collapsed tasks to be seen 
+        
+
+2. Fix drag and drop ordering: DONE
     - Currently, the drop target is a thin line above the task. 
         This is visually unclear. Instead, the drop target should be a container that renders the task inside of it.
         When a task is dropped there, the existing task occupying the space should be moved down. 
-        
+
 -----------------
 
 TODO: 25th Jan
