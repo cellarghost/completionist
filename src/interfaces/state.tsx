@@ -40,10 +40,17 @@ export interface Context {
     getNextID: Function
 }
 
+export interface TaskDrop {
+    taskID: number,
+    moveTo: number,
+    startPos: number,
+}
+
 export type Action =
   | { type: "ADD_TASK"; payload: Task }
   | { type: "REMOVE_TASK"; payload: number }
-  | { type: "UPDATE_TASK"; payload: Task };
+  | { type: "UPDATE_TASK"; payload: Task }
+  | { type: "MOVE_TASK"; payload: TaskDrop}
 
 export interface TaskEditorProperties {
     isNew: boolean | null,

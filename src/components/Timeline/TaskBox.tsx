@@ -9,8 +9,20 @@ import duration from "dayjs/plugin/duration";
 import durationFormat from "dayjs/plugin/duration";
 dayjs.extend(duration);
 dayjs.extend(durationFormat);
+import { useDraggable } from "@dnd-kit/core";
+import {CSS} from '@dnd-kit/utilities';
 
-export default function TaskBox({ task, handleOpenTaskEdit }: { task: Task, handleOpenTaskEdit: Function }) {
+export default function TaskBox({ task, handleOpenTaskEdit, pos }: { task: Task, handleOpenTaskEdit: Function, pos: number }) {
+
+    const {attributes, listeners, setNodeRef, transform} = useDraggable({
+        id: task.id,
+        data: {
+            pos: pos
+        }
+    });
+    const style = {
+        transform: CSS.Translate.toString(transform),
+    };
 
     const {state, dispatch, } = useContext(StateContext);
 
@@ -34,35 +46,38 @@ export default function TaskBox({ task, handleOpenTaskEdit }: { task: Task, hand
     }
 
     return (
-        <Box sx={{
-            display: "flex",
-            flexDirection: "column",
-            bgcolor: 'rgba(142, 105, 121, 1)',
-            padding: '0.5rem',
-            borderRadius: '0.4rem',
-            color: "white",
-        }}>
+        <div ref={setNodeRef} style={style} {...listeners} {...attributes}>
             <Box sx={{
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                justifySelf: 'end'
-            }}>
-                <h2>{task.title}</h2>
-                <Box>
-                    <IconButton onClick={handleEditTask}>
-                        <EditIcon 
-                            sx={{justifySelf: 'end'}}
-                        />
-                    </IconButton>
-                    <IconButton onClick={handleDelete}>
-                        <DeleteIcon 
-                            sx={{justifySelf: 'end'}}
-                        />
-                    </IconButton>
+                flexDirection: "column",
+                bgcolor: 'rgba(142, 105, 121, 1)',
+                padding: '0.5rem',
+                borderRadius: '0.4rem',
+                color: "white",
+            }}
+            >
+                <Box sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    justifySelf: 'end'
+                }}>
+                    <h2>{task.title}</h2>
+                    <Box>
+                        <IconButton onClick={handleEditTask}>
+                            <EditIcon 
+                                sx={{justifySelf: 'end'}}
+                            />
+                        </IconButton>
+                        <IconButton onClick={handleDelete}>
+                            <DeleteIcon 
+                                sx={{justifySelf: 'end'}}
+                            />
+                        </IconButton>
+                    </Box>
                 </Box>
+                <h3>Duration: {dayjs.duration(task.duration_ms).format("HH:mm:ss")}</h3>
             </Box>
-            <h3>Duration: {dayjs.duration(task.duration_ms).format("HH:mm:ss")}</h3>
-        </Box>
+        </div>
     )
 }

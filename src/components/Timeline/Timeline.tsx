@@ -7,6 +7,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import type { Task, TaskEditorProperties } from "../../interfaces/state";
 import TaskEdit from "./TaskEdit";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import DropTask from "./DropTask";
 
 export default function Timeline() {
 
@@ -43,29 +45,49 @@ export default function Timeline() {
         title: null,
         duration_ms: null
     })
+
+    const handleDragEnd = (e: DragEndEvent) => {
+        console.log('[handleDragEnd] : ', e)
+        const taskID = e.active.id;
+        const moveTo = e.over?.data.current?.pos;
+
+        if (!(moveTo == null)) {
+            console.log('yup')
+            const startPos = e.active.data.current?.pos;
+            dispatch({type: "MOVE_TASK", payload: {
+                taskID: taskID,
+                moveTo: moveTo,
+                startPos: startPos
+            }})
+        }
+    }
     
     return (
         <>
-            <Button variant="contained" onClick={() => {handleOpenTaskEdit(true)}}>Add Task</Button>
-            <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
-                {Object.keys(programState.timeline).map((str_id) => {
-                    console.log(str_id)
-                    const id = Number(str_id)
-                    const taskID: number = programState.timeline[id];
-                    
-                    return (
-                        <TaskBox task={programState.taskMap[taskID]} handleOpenTaskEdit={handleOpenTaskEdit}/>
-                    )
-                })}
-            </Box>
-            <Dialog open={openDialog}>
-                <DialogTitle>Create/Edit Task</DialogTitle>
-                <TaskEdit 
-                    handleCloseDialog={handleCloseDialog}
-                    taskEditProperties={taskEditProperties}
-                />
-            </Dialog>
-
+            <DndContext onDragEnd={handleDragEnd}>
+                <Button variant="contained" onClick={() => {handleOpenTaskEdit(true)}}>Add Task</Button>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+                    {Object.keys(programState.timeline).map((str_id) => {
+                        console.log(str_id)
+                        const id = Number(str_id)
+                        const taskID: number = programState.timeline[id];
+                        
+                        return (
+                            <>
+                                <DropTask pos={id} />
+                                <TaskBox task={programState.taskMap[taskID]} handleOpenTaskEdit={handleOpenTaskEdit} pos={id}/>
+                            </>
+                        )
+                    })}
+                </Box>
+                <Dialog open={openDialog}>
+                    <DialogTitle>Create/Edit Task</DialogTitle>
+                    <TaskEdit 
+                        handleCloseDialog={handleCloseDialog}
+                        taskEditProperties={taskEditProperties}
+                    />
+                </Dialog>
+            </DndContext>
         </>
     )
 }

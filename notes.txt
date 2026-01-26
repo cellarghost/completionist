@@ -1,7 +1,18 @@
+TODO: 26th Jan 
+
+1. Fix drag and drop ordering:
+    - Currently, the drop target is a thin line above the task. 
+        This is visually unclear. Instead, the drop target should be a container that renders the task inside of it.
+        When a task is dropped there, the existing task occupying the space should be moved down. 
+        
+-----------------
+
 TODO: 25th Jan
-1. Fix Time (convert from ms to hours, minutes and seconds)
-2. Add subtasks -- bullet point subtasks
 3. Drag and drop reordering
+    - In timeline component, add drop target component between tasks to represent
+
+1. Fix Time (convert from ms to hours, minutes and seconds) - DONE
+2. Add subtasks -- bullet point subtasks
 
 
 ------------------------------------------------
