@@ -4,6 +4,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useContext } from "react";
 import { StateContext } from "../../App";
+import dayjs, { Dayjs } from "dayjs";
+import duration from "dayjs/plugin/duration";
+import durationFormat from "dayjs/plugin/duration";
+dayjs.extend(duration);
+dayjs.extend(durationFormat);
 
 export default function TaskBox({ task, handleOpenTaskEdit }: { task: Task, handleOpenTaskEdit: Function }) {
 
@@ -57,7 +62,7 @@ export default function TaskBox({ task, handleOpenTaskEdit }: { task: Task, hand
                     </IconButton>
                 </Box>
             </Box>
-            <h3>Duration: {task.duration_ms}</h3>
+            <h3>Duration: {dayjs.duration(task.duration_ms).format("HH:mm:ss")}</h3>
         </Box>
     )
 }

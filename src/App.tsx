@@ -6,6 +6,8 @@ import { testData } from './testData';
 import { createContext, useReducer } from 'react';
 import { useState } from 'react';
 import type { ProgramState, Action, Context } from './interfaces/state';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 
 export const StateContext = createContext<Context>(null!);
@@ -59,6 +61,7 @@ function App() {
 
   return (
     <>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StateContext.Provider value={{state: programState, dispatch: dispatch, getNextID: getNextID}}>
         <Box sx={{
           border: "3px solid blue",
@@ -69,6 +72,7 @@ function App() {
           <Timeline />
         </Box>
       </StateContext.Provider>
+    </LocalizationProvider>
     </>
   )
 }
