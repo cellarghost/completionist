@@ -8,6 +8,7 @@ import { useState } from 'react';
 import type { ProgramState, Action, Context } from './interfaces/state';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { TaskPreview } from './components/Panel/TaskPreview';
 
 
 export const StateContext = createContext<Context>(null!);
@@ -72,19 +73,39 @@ function App() {
 
   useEffect(() => {
     console.log('[Debug] programState: ', programState)
+    console.log('[Timeline]: ', programState.timeline)
   }, [programState])
+
+  const [currentlySelected, setCurrentlySelected] = useState<number | null>(null);
+
+  const handleSelectTask = (id:number | null) => {
+      setCurrentlySelected(id);
+  }
 
   return (
     <>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <StateContext.Provider value={{state: programState, dispatch: dispatch, getNextID: getNextID}}>
-        <Box sx={{
-          border: "3px solid blue",
-          minWidth: "20vw",
-          minHeight: "50vh",
-          padding: "1rem"
+        <Box sx={{display: 'flex', 
+          flexDirection: 'row', 
+          border: 'none', 
+          minWidth: '80vw',
+          justifyContent: 'space-evenly'
           }}>
-          <Timeline />
+          <Box sx={{
+            borderRadius: "0.5rem",
+            bgcolor: "rgba(234, 221, 225, 1)",
+            minWidth: "20vw",
+            minHeight: "85vh",
+            padding: "1rem"
+            }}>
+            <Timeline currentlySelected={currentlySelected} handleSelectTask={handleSelectTask}/>
+          </Box>
+          <Box sx={{minWidth: '40vw'}}>
+            {(currentlySelected != null) ? 
+              <TaskPreview task={programState.taskMap[currentlySelected]} currentlySelected={currentlySelected}/>
+            : null }
+          </Box>
         </Box>
       </StateContext.Provider>
     </LocalizationProvider>

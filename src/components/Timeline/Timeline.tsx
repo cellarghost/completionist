@@ -5,13 +5,15 @@ import { StateContext } from "../../App";
 import { useContext } from "react";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import type { Task, TaskEditorProperties } from "../../interfaces/state";
+import type { Task, TaskEditorProperties, TaskOverlay } from "../../interfaces/state";
 import TaskEdit from "./TaskEdit";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
+import { DndContext, DragOverlay, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
 import DropTask from "./DropTask";
 import { motion } from "motion/react";
 
-export default function Timeline() {
+export default function Timeline({currentlySelected, handleSelectTask} : 
+    {currentlySelected: number | null, handleSelectTask: Function}) 
+{
 
     const {state: programState, dispatch, getNextID} = useContext(StateContext);
 
@@ -24,6 +26,8 @@ export default function Timeline() {
     const handleCloseDialog = () => {
         setOpenDialog(false);
     };
+
+    const [activeId, setActiveId] = useState<null | TaskOverlay>(null);
 
     const handleOpenTaskEdit = (isNew: boolean, tid: number | null = null) => {
         console.log('[handleOpenTaskEdit]', programState)
@@ -61,13 +65,35 @@ export default function Timeline() {
                 startPos: startPos
             }})
         }
+
+        setActiveId(null);
+    }
+
+    const handleDragStart = (e: DragStartEvent) => {
+
+        const active: TaskOverlay = {
+            taskID: Number(e.active.id),
+            pos: e.active.data.current?.pos
+        }
+
+        setActiveId(active);
     }
     
     return (
-        <>
-            <DndContext onDragEnd={handleDragEnd}>
-                <Button variant="contained" onClick={() => {handleOpenTaskEdit(true)}}>Add Task</Button>
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
+        <Box onMouseDown={() => {handleSelectTask(null)}}>
+            <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
+                <Button 
+                    variant="contained" 
+                    onClick={() => {handleOpenTaskEdit(true)}}
+                    sx={{
+                        bgcolor: 'rgba(80, 56, 67, 1)', 
+                        marginBottom: '1rem',
+                        fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif'
+                    }}
+                >
+                    Add Task
+                </Button>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: '0rem'}}>
                     {Object.keys(programState.timeline).map((str_id) => {
                         console.log(str_id)
                         const id = Number(str_id)
@@ -76,7 +102,12 @@ export default function Timeline() {
                         return (
                             <motion.div key={taskID} layout transition={{duration: 0.25}}>
                                 <DropTask pos={id}>
-                                    <TaskBox task={programState.taskMap[taskID]} handleOpenTaskEdit={handleOpenTaskEdit} pos={id}/>
+                                    <TaskBox task={programState.taskMap[taskID]} 
+                                    handleOpenTaskEdit={handleOpenTaskEdit} 
+                                    pos={id}
+                                    currentlySelected={currentlySelected}
+                                    handleSelectTask={handleSelectTask}
+                                    />
                                 </DropTask>
                             </motion.div>
                         )
@@ -89,7 +120,17 @@ export default function Timeline() {
                         taskEditProperties={taskEditProperties}
                     />
                 </Dialog>
+                <DragOverlay>
+                    {activeId ? (
+                            <TaskBox task={programState.taskMap[activeId.taskID]} 
+                            handleOpenTaskEdit={handleOpenTaskEdit} 
+                            pos={activeId.pos}
+                            currentlySelected={currentlySelected}
+                            handleSelectTask={handleSelectTask}
+                            />
+                    ): null}
+                </DragOverlay>
             </DndContext>
-        </>
+        </Box>
     )
 }

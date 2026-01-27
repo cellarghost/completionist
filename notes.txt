@@ -1,6 +1,16 @@
-TODO: 26th Jan 
+TODO: 27th Jan 
 
-1. Make tasks collapsable
+1. Add dragoverlay
+
+2. Add edit panel on the right side of the screen:
+    - This should only show when the timeline is not playing. 
+    - Should allow users to edit the details (time, description, name etc.)
+
+3. Add a sort button:
+    - Should sort items from
+
+----------------------------------------------------------------
+1. Make tasks collapsable: DONE
     - Each tasks takes up a large space on the screen. 
         Change the font to be smaller
         Add a dropdown arrow to allow the collapsed tasks to be seen 

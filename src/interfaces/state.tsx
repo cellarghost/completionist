@@ -46,6 +46,11 @@ export interface TaskDrop {
     startPos: number,
 }
 
+export interface TaskOverlay {
+    taskID: number,
+    pos: number
+}
+
 export type Action =
   | { type: "ADD_TASK"; payload: Task }
   | { type: "REMOVE_TASK"; payload: number }
