@@ -13,15 +13,14 @@ export const testData: ProgramState = {
             title: "Task 1",
             duration_ms: 120000,
             hasSubtasks: false,
-            completed: false
-        },
-        1: {
-            id: 1,
-            title: "Task 2",
-            duration_ms: 120000,
-            hasSubtasks: false,
-            completed: false
+            completed: false,
+            description: ""
         }
     },
-    timeline: [0, 1]
+    timeline: [0],
+    playbackState: {
+        elapsed_task: 0, 
+        currentTask: 0,
+        paused: true,
+    }
 }

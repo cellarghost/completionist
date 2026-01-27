@@ -11,26 +11,26 @@ import durationFormat from "dayjs/plugin/duration";
 dayjs.extend(duration);
 dayjs.extend(durationFormat);
 
-
-
 export function TaskPreview({task, currentlySelected} : {task: Task, currentlySelected: null | number}) {
     
     const {state: programState, dispatch, getNextID} = useContext(StateContext);
 
     const [newTitle, setNewTitle] = useState<String | null>(task.title);
     const [newDuration_ms, setNewDuration_ms] = useState<number | null>(task.duration_ms);
+    const [newDesc, setNewDesc] = useState<String| null>(task.description)
 
     useEffect(() => {
         setNewTitle(task.title);
         setNewDuration_ms(task.duration_ms);
+        setNewDesc(task.description);
     }, [currentlySelected])
 
     useEffect(() => {
         dispatch({
             type: "UPDATE_TASK",
-            payload: { id: task.id, title: newTitle, duration_ms: newDuration_ms }
+            payload: { id: task.id, title: newTitle, duration_ms: newDuration_ms, description: newDesc }
         });
-    }, [newDuration_ms, newTitle])
+    }, [newDuration_ms, newTitle, newDesc])
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -53,7 +53,13 @@ export function TaskPreview({task, currentlySelected} : {task: Task, currentlySe
     };
 
     return (
-        <Box>
+        <Box sx={{
+            borderRadius: '0.5rem',
+            border: 'solid 1px rgba(0, 0, 0, 0.03) ',
+            boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.18)',
+            padding: '1rem',
+            bgcolor: 'rgba(249, 245, 246, 0.93)'
+        }}>
             {task && (
                 <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>
                     <TextField 
@@ -83,6 +89,14 @@ export function TaskPreview({task, currentlySelected} : {task: Task, currentlySe
                         slotProps={{ 
                             textField: { label: "Duration" } 
                         }}
+                    />
+                    <TextField
+                        label="Description"
+                        value={newDesc}
+                        onChange={(e) => {setNewDesc(e.target.value)}}
+                        multiline
+                        maxRows={Infinity}
+                        minRows={4}
                     />
                 </form>
             )}

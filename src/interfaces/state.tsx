@@ -15,7 +15,8 @@ export interface Task {
     duration_ms: number
     hasSubtasks: boolean
     subTasks?: number[]
-    completed: boolean
+    completed: boolean,
+    description: String
 }
 
 export interface TaskProgress {
@@ -31,13 +32,20 @@ export interface TaskProgress {
 export interface ProgramState {
     user: UserState
     taskMap: TaskMap 
-    timeline: number[]
+    timeline: number[],
+    playbackState: PlaybackState
 }
 
 export interface Context {
     state: ProgramState,
     dispatch: Function
     getNextID: Function
+}
+
+export interface PlaybackState {
+    elapsed_task: number, 
+    currentTask: number,
+    paused: boolean,
 }
 
 export interface TaskDrop {

@@ -1,6 +1,13 @@
 TODO: 27th Jan 
 
-1. Add dragoverlay
+- Play/Pause function: 
+    - Add a new component with play and pause buttons 
+- Sort by duration and things 
+    - 
+
+------------------------------------------------
+
+1. Add dragoverlay - DONE
 
 2. Add edit panel on the right side of the screen:
     - This should only show when the timeline is not playing. 

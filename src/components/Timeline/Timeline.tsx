@@ -1,5 +1,5 @@
 import { Box, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskBox from "./TaskBox";
 import { StateContext } from "../../App";
 import { useContext } from "react";
@@ -10,6 +10,7 @@ import TaskEdit from "./TaskEdit";
 import { DndContext, DragOverlay, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
 import DropTask from "./DropTask";
 import { motion } from "motion/react";
+import PlaybackBar from "./PlaybackBar";
 
 export default function Timeline({currentlySelected, handleSelectTask} : 
     {currentlySelected: number | null, handleSelectTask: Function}) 
@@ -26,6 +27,10 @@ export default function Timeline({currentlySelected, handleSelectTask} :
     const handleCloseDialog = () => {
         setOpenDialog(false);
     };
+
+    useEffect(() => {
+        handleSelectTask(programState.timeline[programState.timeline.length-1])
+    }, [programState.timeline.length])
 
     const [activeId, setActiveId] = useState<null | TaskOverlay>(null);
 
@@ -57,7 +62,7 @@ export default function Timeline({currentlySelected, handleSelectTask} :
 
         dispatch({
             type: "ADD_TASK",
-            payload: { id: nextID, title: "New Task", duration_ms: 60000 }
+            payload: { id: nextID, title: "New Task", duration_ms: 60000, description: "" }
         });
     }
 
@@ -92,18 +97,21 @@ export default function Timeline({currentlySelected, handleSelectTask} :
     return (
         <Box onMouseDown={() => {handleSelectTask(null)}}>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
-                <Button 
-                    variant="contained" 
-                    onClick={() => {handleAddTask()}}
-                    sx={{
-                        bgcolor: 'rgba(80, 56, 67, 1)', 
-                        marginBottom: '1rem',
-                        fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif'
-                    }}
-                >
-                    Add Task
-                </Button>
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '0rem'}}>
+                <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
+                    <Button 
+                        variant="contained" 
+                        onClick={() => {handleAddTask()}}
+                        sx={{
+                            bgcolor: 'rgba(80, 56, 67, 1)', 
+                            marginBottom: '0rem',
+                            fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif'
+                        }}
+                    >
+                        Add Task
+                    </Button>
+                    <PlaybackBar />
+                </Box>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: '0rem', paddingTop: '1rem'}}>
                     {Object.keys(programState.timeline).map((str_id) => {
                         console.log(str_id)
                         const id = Number(str_id)

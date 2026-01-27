@@ -80,7 +80,8 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
                 color: "white",
                 transform: (currentlySelected == task.id) ? 'scale(1.01)' : 'scale(1)',
                 transition: 'transform 0.2s',
-                userSelect: 'none'
+                userSelect: 'none',
+                boxShadow: (currentlySelected == task.id) ? 'inset rgba(0, 0, 0, 0.22) 0px 0px 10px' : undefined
             }}
             onMouseDown={(e) => {
                 handleMouseDown(e)
@@ -120,11 +121,6 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
                     }}>
                         <h2>{task.title}</h2>
                         <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                            <IconButton onClick={handleEditTask} onMouseDown={(e) => e.stopPropagation()}>
-                                <EditIcon 
-                                    sx={{justifySelf: 'end'}}
-                                />
-                            </IconButton>
                             <IconButton onClick={handleDelete} onMouseDown={(e) => e.stopPropagation()}>
                                 <DeleteIcon 
                                     sx={{justifySelf: 'end'}}

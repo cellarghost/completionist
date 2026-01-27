@@ -53,12 +53,12 @@ export default function TaskEdit({handleCloseDialog, taskEditProperties}: {
         if (isNew) {
             dispatch({
             type: "ADD_TASK",
-            payload: { id: taskEditProperties.id, title: title, duration_ms: duration_ms }
+            payload: { id: taskEditProperties.id, title: title, duration_ms: duration_ms, description: "" }
         });
         }
         dispatch({
             type: "UPDATE_TASK",
-            payload: { id: taskEditProperties.id, title: title, duration_ms: duration_ms }
+            payload: { id: taskEditProperties.id, title: title, duration_ms: duration_ms, description: "" }
         });
         handleCloseDialog();
         // console.log(msToTimeFormat(Number(duration)))
