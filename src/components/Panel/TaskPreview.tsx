@@ -54,36 +54,38 @@ export function TaskPreview({task, currentlySelected} : {task: Task, currentlySe
 
     return (
         <Box>
-            <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>
-                <TextField 
-                      sx={{
-                            "& .MuiInput-root": {
-                                fontSize: "2.5rem",       // h1 size
-                                fontWeight: "bold",
-                                lineHeight: 1.2,
-                            },
-                            "& .MuiInput-underline:before": {
-                                borderBottomWidth: "2px", // thicker underline
-                            },
-                            "& .MuiInput-underline:after": {
-                                borderBottomWidth: "3px", // thicker active underline
-                            }
+            {task && (
+                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>
+                    <TextField 
+                        sx={{
+                                "& .MuiInput-root": {
+                                    fontSize: "2.5rem",       // h1 size
+                                    fontWeight: "bold",
+                                    lineHeight: 1.2,
+                                },
+                                "& .MuiInput-underline:before": {
+                                    borderBottomWidth: "2px", // thicker underline
+                                },
+                                "& .MuiInput-underline:after": {
+                                    borderBottomWidth: "3px", // thicker active underline
+                                }
+                            }}
+                        value={newTitle}
+                        variant="standard"
+                        onChange={(e) => setNewTitle(e.target.value)}
+                    />
+                    <TimePicker
+                        ampm={false}
+                        views={['hours', 'minutes', 'seconds']}
+                        value={dayjs().startOf("day").add(Number(newDuration_ms), "millisecond")}
+                        onChange={handleChangeDurationMS}
+                        format="HH:mm:ss"   // NEW replacement for inputFormat
+                        slotProps={{ 
+                            textField: { label: "Duration" } 
                         }}
-                    value={newTitle}
-                    variant="standard"
-                    onChange={(e) => setNewTitle(e.target.value)}
-                />
-                <TimePicker
-                    ampm={false}
-                    views={['hours', 'minutes', 'seconds']}
-                    value={dayjs().startOf("day").add(Number(newDuration_ms), "millisecond")}
-                    onChange={handleChangeDurationMS}
-                    format="HH:mm:ss"   // NEW replacement for inputFormat
-                    slotProps={{ 
-                        textField: { label: "Duration" } 
-                    }}
-                />
-            </form>
+                    />
+                </form>
+            )}
         </Box>
     )
 }

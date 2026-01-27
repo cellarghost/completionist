@@ -51,6 +51,16 @@ export default function Timeline({currentlySelected, handleSelectTask} :
         duration_ms: null
     })
 
+    const handleAddTask = () => {
+
+        const nextID = getNextID(programState);
+
+        dispatch({
+            type: "ADD_TASK",
+            payload: { id: nextID, title: "New Task", duration_ms: 60000 }
+        });
+    }
+
     const handleDragEnd = (e: DragEndEvent) => {
         console.log('[handleDragEnd] : ', e)
         const taskID = e.active.id;
@@ -84,7 +94,7 @@ export default function Timeline({currentlySelected, handleSelectTask} :
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
                 <Button 
                     variant="contained" 
-                    onClick={() => {handleOpenTaskEdit(true)}}
+                    onClick={() => {handleAddTask()}}
                     sx={{
                         bgcolor: 'rgba(80, 56, 67, 1)', 
                         marginBottom: '1rem',

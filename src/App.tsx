@@ -82,6 +82,8 @@ function App() {
       setCurrentlySelected(id);
   }
 
+  
+
   return (
     <>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -103,7 +105,9 @@ function App() {
           </Box>
           <Box sx={{minWidth: '40vw'}}>
             {(currentlySelected != null) ? 
-              <TaskPreview task={programState.taskMap[currentlySelected]} currentlySelected={currentlySelected}/>
+              ( programState.taskMap[currentlySelected] &&
+                <TaskPreview task={programState.taskMap[currentlySelected]} currentlySelected={currentlySelected}/>
+              )
             : null }
           </Box>
         </Box>

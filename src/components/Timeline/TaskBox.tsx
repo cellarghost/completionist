@@ -120,12 +120,12 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
                     }}>
                         <h2>{task.title}</h2>
                         <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                            <IconButton onClick={handleEditTask}>
+                            <IconButton onClick={handleEditTask} onMouseDown={(e) => e.stopPropagation()}>
                                 <EditIcon 
                                     sx={{justifySelf: 'end'}}
                                 />
                             </IconButton>
-                            <IconButton onClick={handleDelete}>
+                            <IconButton onClick={handleDelete} onMouseDown={(e) => e.stopPropagation()}>
                                 <DeleteIcon 
                                     sx={{justifySelf: 'end'}}
                                 />
