@@ -38,6 +38,7 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
         if (state.playbackState.currentTask == taskPos) {
             setElapsed(state.playbackState.elapsed_task);
         }
+        console.log('[playbackstate]: ', elapsed, task.duration_ms)
     }, [state.playbackState])
 
     const timerRef = useRef<any>(null);
@@ -52,7 +53,7 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
         } else {
             timerRef.current = setInterval(() => {
                 dispatch({type: "INCREMENT_TIMER_100MS", payload: null})
-            })
+            }, 100)
         }
     }, [state.playbackState.paused])
 
@@ -61,7 +62,7 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
             if (!timerRef.current) {
                 timerRef.current = setInterval(() => {
                     dispatch({type: "INCREMENT_TIMER_100MS", payload: null})
-                })
+                }, 100)
             }
         }
     }, [state.playbackState.currentTask])
