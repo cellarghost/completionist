@@ -64,6 +64,9 @@ export type Action =
   | { type: "REMOVE_TASK"; payload: number }
   | { type: "UPDATE_TASK"; payload: Task }
   | { type: "MOVE_TASK"; payload: TaskDrop}
+  | { type: "TOGGLE_PLAYBACK"; payload: any}
+  | { type: "INCREMENT_TASK_NO"; payload: any}
+  | { type: "INCREMENT_TIMER_100MS"; payload: any}
 
 export interface TaskEditorProperties {
     isNew: boolean | null,

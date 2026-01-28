@@ -54,6 +54,47 @@ function reducer(state: ProgramState, action: Action) {
         ...state,
         timeline: timeline_noTask.toSpliced(action.payload.moveTo, 0, action.payload.taskID)
       }
+    
+    case "TOGGLE_PLAYBACK":
+      return {
+        ...state,
+        playbackState: {
+          ...state.playbackState,
+          paused: !state.playbackState.paused
+        }
+      }
+    
+    case "INCREMENT_TASK_NO": {
+
+      let list_complete = false;
+      if ((state.playbackState.currentTask + 1) >= state.timeline.length) {
+        list_complete = true;
+      }
+      return {
+        ...state,
+        playbackState: {
+          paused: list_complete,
+          elapsed_task: 0,
+          currentTask: list_complete ? state.playbackState.currentTask : state.playbackState.currentTask + 1
+        }
+      }
+    }
+
+    case "INCREMENT_TIMER_100MS": {
+      let pause = false;
+      const task = state.taskMap[state.timeline[state.playbackState.currentTask]];
+      if ((state.playbackState.elapsed_task + 100) >= task.duration_ms) {
+        pause = true;
+      }
+      return {
+        ...state,
+        playbackState: {
+          ...state.playbackState,
+          paused: pause,
+          elapsed_task: state.playbackState.elapsed_task + 100,
+        }
+      }
+    }
 
     default:
       return state;

@@ -1,4 +1,10 @@
-TODO: 27th Jan 
+TODO: 28th Jan 
+
+- Create the timing function 
+    - On the current task, a progress bar shows under the text that changes to gray. 
+    - 
+
+-------------------------------------------------------
 
 - Play/Pause function: 
     - Add a new component with play and pause buttons 

@@ -4,10 +4,16 @@ import StopIcon from '@mui/icons-material/Stop';
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious';
 import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { Box, IconButton } from '@mui/material';
+import { useContext } from 'react';
+import { StateContext } from '../../App';
 
 export default function PlaybackBar() {
 
-    
+    const {state: programState, dispatch} = useContext(StateContext)
+
+    const handleTogglePlayback = () => {
+        dispatch({type: "TOGGLE_PLAYBACK", payload: null})
+    }
 
     return (
         <Box sx={{
@@ -17,11 +23,8 @@ export default function PlaybackBar() {
             <IconButton>
                 <SkipPreviousIcon />
             </IconButton>
-            <IconButton>
-                <PlayArrowIcon />
-            </IconButton>
-            <IconButton>
-                <PauseIcon />
+            <IconButton onClick={handleTogglePlayback}>
+                {programState.playbackState.paused ? <PlayArrowIcon /> : <PauseIcon/>}
             </IconButton>
             <IconButton>
                 <SkipNextIcon />
