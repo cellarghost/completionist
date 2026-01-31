@@ -22,5 +22,6 @@ export const testData: ProgramState = {
         elapsed_task: 0, 
         currentTask: 0,
         paused: true,
+        started: false,
     }
 }

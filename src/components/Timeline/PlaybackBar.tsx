@@ -15,6 +15,10 @@ export default function PlaybackBar() {
         dispatch({type: "TOGGLE_PLAYBACK", payload: null})
     }
 
+    const handleStop = () => {
+        dispatch({type: "STOP_PROGRESS", payload: null})
+    }
+
     return (
         <Box sx={{
             display: 'flex',
@@ -29,7 +33,7 @@ export default function PlaybackBar() {
             <IconButton>
                 <SkipNextIcon />
             </IconButton>
-            <IconButton>
+            <IconButton onClick={handleStop}>
                 <StopIcon />
             </IconButton>
         </Box>

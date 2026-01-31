@@ -9,6 +9,7 @@ import type { ProgramState, Action, Context } from './interfaces/state';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TaskPreview } from './components/Panel/TaskPreview';
+import TaskInProgress from './components/Panel/TaskInProgress';
 
 
 export const StateContext = createContext<Context>(null!);
@@ -60,7 +61,8 @@ function reducer(state: ProgramState, action: Action) {
         ...state,
         playbackState: {
           ...state.playbackState,
-          paused: !state.playbackState.paused
+          paused: !state.playbackState.paused,
+          started: true
         }
       }
     
@@ -75,7 +77,8 @@ function reducer(state: ProgramState, action: Action) {
         playbackState: {
           paused: list_complete,
           elapsed_task: 0,
-          currentTask: list_complete ? state.playbackState.currentTask : state.playbackState.currentTask + 1
+          currentTask: list_complete ? 0 : state.playbackState.currentTask + 1,
+          started : !list_complete
         }
       }
     }
@@ -92,6 +95,18 @@ function reducer(state: ProgramState, action: Action) {
           ...state.playbackState,
           paused: pause,
           elapsed_task: state.playbackState.elapsed_task + 100,
+        }
+      }
+    }
+
+    case "STOP_PROGRESS": {
+      return {
+        ...state,
+        playbackState: {
+          elapsed_task: 0, 
+          currentTask: 0,
+          paused: true,
+          started: false
         }
       }
     }
@@ -145,11 +160,14 @@ function App() {
             <Timeline currentlySelected={currentlySelected} handleSelectTask={handleSelectTask}/>
           </Box>
           <Box sx={{minWidth: '40vw'}}>
-            {(currentlySelected != null) ? 
+            {programState.playbackState.started ? 
+              <TaskInProgress task={programState.taskMap[programState.timeline[programState.playbackState.currentTask]]}/> : 
+              (currentlySelected != null) ? 
               ( programState.taskMap[currentlySelected] &&
                 <TaskPreview task={programState.taskMap[currentlySelected]} currentlySelected={currentlySelected}/>
               )
-            : null }
+            : null 
+            }
           </Box>
         </Box>
       </StateContext.Provider>

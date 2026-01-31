@@ -1,3 +1,20 @@
+TODO: 30th Jan 
+
+Lift timer control up to top level!! 
+
+- Should be simple as no?
+- elapsed_task should be a prop passed down to the taskbox 
+- 
+
+----------------------------------------------------------
+
+- Fix stop button 
+- Add countdown on task view
+- Add task view
+
+
+----------------------------------------------------------
+
 TODO: 28th Jan 
 
 - Create the timing function 

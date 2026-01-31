@@ -43,29 +43,19 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
 
     const timerRef = useRef<any>(null);
 
-    // const timer = setInterval(() => {
-    //     dispatch({type: "INCREMENT_TIMER_100MS", payload: null})
-    // })
-
     useEffect(() => {
-        if (state.playbackState.paused) {
-            clearInterval(timerRef.current)
-        } else {
-            timerRef.current = setInterval(() => {
-                dispatch({type: "INCREMENT_TIMER_100MS", payload: null})
-            }, 100)
-        }
-    }, [state.playbackState.paused])
-
-    useEffect(() => {
-        if ((state.playbackState.currentTask == task.id) && !state.playbackState.paused) {
-            if (!timerRef.current) {
+        if ((task.id == state.taskMap[state.timeline[state.playbackState.currentTask]].id)) {
+            if (!state.playbackState.paused && !timerRef.current) {
                 timerRef.current = setInterval(() => {
                     dispatch({type: "INCREMENT_TIMER_100MS", payload: null})
                 }, 100)
+            } else {
+                clearInterval(timerRef.current);
             }
+        } else {
+            clearInterval(timerRef.current)
         }
-    }, [state.playbackState.currentTask])
+    }, [state.playbackState.paused, state.playbackState.started, state.playbackState.currentTask])
 
     const [collapsed, setCollapsed] = useState(true);
 

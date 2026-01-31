@@ -46,6 +46,7 @@ export interface PlaybackState {
     elapsed_task: number, 
     currentTask: number,
     paused: boolean,
+    started: boolean
 }
 
 export interface TaskDrop {
@@ -67,6 +68,7 @@ export type Action =
   | { type: "TOGGLE_PLAYBACK"; payload: any}
   | { type: "INCREMENT_TASK_NO"; payload: any}
   | { type: "INCREMENT_TIMER_100MS"; payload: any}
+  | { type: "STOP_PROGRESS"; payload: any}
 
 export interface TaskEditorProperties {
     isNew: boolean | null,
