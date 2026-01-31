@@ -10,6 +10,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TaskPreview } from './components/Panel/TaskPreview';
 import TaskInProgress from './components/Panel/TaskInProgress';
+import { useRef } from 'react';
 
 
 export const StateContext = createContext<Context>(null!);
@@ -127,6 +128,31 @@ function App() {
     testData
   )
 
+  const timerRef = useRef<any>(null);
+
+  useEffect(() => {
+  if (programState.playbackState.paused) {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+    return;
+  }
+
+  // restart interval on unpause or task change
+  timerRef.current = setInterval(() => {
+    dispatch({ type: "INCREMENT_TIMER_100MS", payload: null });
+  }, 100);
+
+  return () => {
+    clearInterval(timerRef.current);
+    timerRef.current = null;
+  };
+}, [
+  programState.playbackState.paused,
+  programState.playbackState.currentTask
+]);
+
   useEffect(() => {
     console.log('[Debug] programState: ', programState)
     console.log('[Timeline]: ', programState.timeline)
@@ -138,12 +164,10 @@ function App() {
       setCurrentlySelected(id);
   }
 
-  
-
   return (
     <>
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <StateContext.Provider value={{state: programState, dispatch: dispatch, getNextID: getNextID}}>
+      <StateContext.Provider value={{state: programState, dispatch: dispatch, getNextID: getNextID, timerRef: timerRef}}>
         <Box sx={{display: 'flex', 
           flexDirection: 'row', 
           border: 'none', 

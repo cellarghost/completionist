@@ -39,7 +39,8 @@ export interface ProgramState {
 export interface Context {
     state: ProgramState,
     dispatch: Function
-    getNextID: Function
+    getNextID: Function,
+    timerRef:  any
 }
 
 export interface PlaybackState {
