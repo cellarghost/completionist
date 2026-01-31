@@ -16,13 +16,12 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 
-export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelected, handleSelectTask, elapsed }: { 
+export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelected, handleSelectTask}: { 
     task: Task, 
     handleOpenTaskEdit: Function, 
     pos: number 
     currentlySelected: number | null,
     handleSelectTask: Function,
-    elapsed: number | null,
 }) {
     
     // const [elapsed, setElapsed] = useState<number | null>(null)
@@ -34,27 +33,6 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
     useEffect(() => {
         setTaskPos(state.timeline.findIndex((e) => e == task.id))
     }, [state.timeline])
-
-    // useEffect(() => {
-    //     if (state.playbackState.currentTask == taskPos) {
-    //         setElapsed(state.playbackState.elapsed_task);
-    //     }
-    //     console.log('[playbackstate]: ', elapsed, task.duration_ms)
-    // }, [state.playbackState])
-
-    // useEffect(() => {
-    //     if ((task.id == state.taskMap[state.timeline[state.playbackState.currentTask]].id)) {
-    //         if (!state.playbackState.paused && !timerRef.current) {
-    //             timerRef.current = setInterval(() => {
-    //                 dispatch({type: "INCREMENT_TIMER_100MS", payload: null})
-    //             }, 100)
-    //         } else {
-    //             clearInterval(timerRef.current);
-    //         }
-    //     } else {
-    //         clearInterval(timerRef.current)
-    //     }
-    // }, [state.playbackState.paused, state.playbackState.started, state.playbackState.currentTask])
 
     const [collapsed, setCollapsed] = useState(true);
 
