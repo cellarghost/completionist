@@ -61,6 +61,8 @@ export interface TaskOverlay {
     pos: number
 }
 
+export type SortOrder = "ASC" | "DESC"
+
 export type Action =
   | { type: "ADD_TASK"; payload: Task }
   | { type: "REMOVE_TASK"; payload: number }
@@ -70,6 +72,7 @@ export type Action =
   | { type: "INCREMENT_TASK_NO"; payload: any}
   | { type: "INCREMENT_TIMER_100MS"; payload: any}
   | { type: "STOP_PROGRESS"; payload: any}
+  | { type: "SORT_DURATION"; payload: SortOrder}
 
 export interface TaskEditorProperties {
     isNew: boolean | null,

@@ -21,7 +21,7 @@ export default function TaskInProgress({task} : {task: Task}) {
     return (
         <>
             <h1>{task.title}</h1>
-            <Button onClick={handleNextTask}>Complete / Skip</Button>
+            <Button onClick={handleNextTask} variant="contained">Complete / Skip</Button>
             <h2>{dayjs.duration(
                 task.duration_ms - state.playbackState.elapsed_task
                 ).format("HH:mm:ss")}</h2>

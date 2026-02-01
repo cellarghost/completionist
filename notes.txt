@@ -1,3 +1,10 @@
+TODO: 1st Feb
+
+- Add "Sort By" Button 
+- Add "Undo" feature 
+
+--------------------------------------------------------------
+
 TODO: 30th Jan 
 
 Lift timer control up to top level!! 

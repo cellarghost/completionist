@@ -5,7 +5,7 @@ import Timeline from './components/Timeline/Timeline'
 import { testData } from './testData';
 import { createContext, useEffect, useReducer } from 'react';
 import { useState } from 'react';
-import type { ProgramState, Action, Context } from './interfaces/state';
+import type { ProgramState, Action, Context, Task } from './interfaces/state';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TaskPreview } from './components/Panel/TaskPreview';
@@ -112,6 +112,21 @@ function reducer(state: ProgramState, action: Action) {
       }
     }
 
+    case "SORT_DURATION": {
+      const compareFn = (a: number, b: number) => {
+        if (action.payload == "ASC") {
+          return state.taskMap[a].duration_ms - state.taskMap[b].duration_ms;
+        } else {
+          return state.taskMap[b].duration_ms- state.taskMap[a].duration_ms;
+        }
+      }
+
+      return {
+        ...state,
+        timeline: state.timeline.toSorted(compareFn)
+      }
+    }
+
     default:
       return state;
   }
@@ -176,7 +191,7 @@ function App() {
           }}>
           <Box sx={{
             borderRadius: "0.5rem",
-            bgcolor: "rgba(234, 221, 225, 1)",
+            bgcolor: "rgba(36, 27, 32, 1)",
             minWidth: "20vw",
             minHeight: "85vh",
             padding: "1rem"

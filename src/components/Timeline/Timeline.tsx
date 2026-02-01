@@ -93,6 +93,10 @@ export default function Timeline({currentlySelected, handleSelectTask} :
 
         setActiveId(active);
     }
+
+    const handleSortBy = () => {
+        dispatch({type: "SORT_DURATION", payload: "ASC"})
+    }
     
     return (
         <Box onMouseDown={() => {handleSelectTask(null)}}>
@@ -104,10 +108,23 @@ export default function Timeline({currentlySelected, handleSelectTask} :
                         sx={{
                             bgcolor: 'rgba(80, 56, 67, 1)', 
                             marginBottom: '0rem',
-                            fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif'
+                            fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+                            color: 'white',
                         }}
                     >
                         Add Task
+                    </Button>
+                    <Button 
+                        variant="contained" 
+                        onClick={() => {handleSortBy()}}
+                        sx={{
+                            bgcolor: 'rgba(80, 56, 67, 1)', 
+                            marginBottom: '0rem',
+                            fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
+                            color: 'white',
+                        }}
+                    >
+                        Sort
                     </Button>
                     <PlaybackBar />
                 </Box>
