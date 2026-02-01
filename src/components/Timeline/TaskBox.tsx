@@ -63,6 +63,16 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
         }
     }
 
+    const [isComplete, setIsComplete] = useState<boolean>(false)
+
+    useEffect(() => {
+        if (state.playbackState.currentTask > pos) {
+            setIsComplete(true)
+        } else {
+            setIsComplete(false)
+        }
+    }, [state.playbackState.currentTask])
+
     const handleEditTask = (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.stopPropagation();
         handleOpenTaskEdit(false, task.id)
@@ -70,10 +80,12 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
 
     const handleMouseDown = (ev: React.MouseEvent) => {
         ev.stopPropagation();
-        if (currentlySelected == task.id) {
-            handleSelectTask(null);
-        } else {
-            handleSelectTask(task.id)
+        if (!state.playbackState.started) {
+            if (currentlySelected == task.id) {
+                handleSelectTask(null);
+            } else {
+                handleSelectTask(task.id)
+            }
         }
     }
 
@@ -82,7 +94,8 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
             <Box>
                 <Box sx={{
                     display: 'flex',
-                    bgcolor: (currentlySelected == task.id) ? 'rgba(116, 82, 98, 1)' : 'rgba(142, 105, 121, 1)',
+                    bgcolor: (currentlySelected == task.id) ? 'rgba(116, 82, 98, 1)' : 
+                    (isComplete ? 'rgba(110, 104, 107, 1)' : 'rgba(142, 105, 121, 1)'),
                     flexDirection: 'column',
                     borderRadius: '0.4rem',
                     color: "white",

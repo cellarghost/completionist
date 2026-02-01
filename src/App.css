@@ -26,6 +26,16 @@
   }
 }
 
+ @keyframes fadein {
+  0%   {transform: translate(0px, -40px); opacity: 0;}
+  100% {transform: translate(0px, 0px); opacity: 1;}
+}
+
+.taskInProgress {
+  animation-name: fadein;
+  animation-duration: 0.5s;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;

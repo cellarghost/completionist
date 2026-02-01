@@ -2,7 +2,7 @@ import type { Task } from "../../interfaces/state";
 import dayjs from "dayjs";
 import { StateContext } from "../../App";
 import { useContext, useState, useEffect } from "react";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 export default function TaskInProgress({task} : {task: Task}) {
 
@@ -19,15 +19,21 @@ export default function TaskInProgress({task} : {task: Task}) {
     }
 
     return (
-        <>
+        <div className="taskInProgress" key={task.id}>
             <h1>{task.title}</h1>
-            <Button onClick={handleNextTask} variant="contained">Complete / Skip</Button>
             <h2>{dayjs.duration(
                 task.duration_ms - state.playbackState.elapsed_task
                 ).format("HH:mm:ss")}</h2>
-            <p>
+            <Typography sx={{ whiteSpace: 'pre-line', color: "white" }}>
                 {task.description}
-            </p>
-        </>
+            </Typography>
+            <Button onClick={handleNextTask} variant="contained">
+                {(state.playbackState.currentTask >= state.timeline.length - 1) ? 
+                    "Finish"
+                :
+                    `Next Task: ${state.taskMap[state.playbackState.currentTask + 1].title}`
+                }
+            </Button>
+        </div>
     )
 }

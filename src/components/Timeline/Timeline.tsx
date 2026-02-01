@@ -1,11 +1,11 @@
-import { Box, Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Box, Button, ClickAwayListener, Menu, MenuItem, MenuList, Paper, Popper } from "@mui/material";
+import { useEffect, useState, useRef } from "react";
 import TaskBox from "./TaskBox";
 import { StateContext } from "../../App";
 import { useContext } from "react";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import type { Task, TaskEditorProperties, TaskOverlay } from "../../interfaces/state";
+import type { SortOrder, Task, TaskEditorProperties, TaskOverlay } from "../../interfaces/state";
 import TaskEdit from "./TaskEdit";
 import { DndContext, DragOverlay, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
 import DropTask from "./DropTask";
@@ -15,6 +15,14 @@ import PlaybackBar from "./PlaybackBar";
 export default function Timeline({currentlySelected, handleSelectTask} : 
     {currentlySelected: number | null, handleSelectTask: Function}) 
 {
+
+    const [sortMenuOpen, setSortMenuOpen] = useState(false);
+
+    const anchorRef = useRef<HTMLButtonElement>(null);
+
+    const handleSortMenuToggle = () => {
+        setSortMenuOpen((prevOpen) => !prevOpen);
+    };
 
     const {state: programState, dispatch, getNextID} = useContext(StateContext);
 
@@ -56,6 +64,17 @@ export default function Timeline({currentlySelected, handleSelectTask} :
         duration_ms: null
     })
 
+    const handleClose = (event: Event | React.SyntheticEvent) => {
+        if (
+        anchorRef.current &&
+        anchorRef.current.contains(event.target as HTMLElement)
+        ) {
+        return;
+        }
+
+        setSortMenuOpen(false);
+    };
+
     const handleAddTask = () => {
 
         const nextID = getNextID(programState);
@@ -94,9 +113,19 @@ export default function Timeline({currentlySelected, handleSelectTask} :
         setActiveId(active);
     }
 
-    const handleSortBy = () => {
-        dispatch({type: "SORT_DURATION", payload: "ASC"})
+    const handleSortBy = (order: SortOrder) => {
+        dispatch({type: "SORT_DURATION", payload: order})
     }
+
+    const prevOpen = useRef<any>(sortMenuOpen);
+
+    useEffect(() => {
+        if (prevOpen.current === true && sortMenuOpen === false) {
+            anchorRef.current!.focus();
+        }
+
+        prevOpen.current = sortMenuOpen;
+    }, [sortMenuOpen]);
     
     return (
         <Box onMouseDown={() => {handleSelectTask(null)}}>
@@ -115,8 +144,12 @@ export default function Timeline({currentlySelected, handleSelectTask} :
                         Add Task
                     </Button>
                     <Button 
+                        ref={anchorRef}
                         variant="contained" 
-                        onClick={() => {handleSortBy()}}
+                        onClick={handleSortMenuToggle}
+                        aria-controls={sortMenuOpen ? 'composition-menu' : undefined}
+                        aria-expanded={sortMenuOpen ? 'true' : undefined}
+                        aria-haspopup="true"
                         sx={{
                             bgcolor: 'rgba(80, 56, 67, 1)', 
                             marginBottom: '0rem',
@@ -126,6 +159,30 @@ export default function Timeline({currentlySelected, handleSelectTask} :
                     >
                         Sort
                     </Button>
+                    <Popper
+                        open={sortMenuOpen}
+                        anchorEl={anchorRef.current}
+                        role={undefined}
+                        placement="bottom-start"
+                        transition
+                    >
+                        <Paper>
+                            <ClickAwayListener onClickAway={handleClose}>
+                                <Menu
+                                    anchorEl={anchorRef.current}
+                                    open={sortMenuOpen}
+                                    onClose={handleClose}
+                                >
+                                    <MenuItem onClick={() => handleSortBy("ASC")}>
+                                        Shortest Duration
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleSortBy("DESC")}>
+                                        Longest Duration
+                                    </MenuItem>
+                                </Menu>
+                            </ClickAwayListener>
+                        </Paper>
+                    </Popper>
                     <PlaybackBar />
                 </Box>
                 <Box sx={{display: 'flex', flexDirection: 'column', gap: '0rem', paddingTop: '1rem'}}>
