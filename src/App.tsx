@@ -11,6 +11,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TaskPreview } from './components/Panel/TaskPreview';
 import TaskInProgress from './components/Panel/TaskInProgress';
 import { useRef } from 'react';
+import { saveState, loadState } from './db';
 
 
 export const StateContext = createContext<Context>(null!);
@@ -18,6 +19,12 @@ export const StateContext = createContext<Context>(null!);
 function reducer(state: ProgramState, action: Action) {
 
   switch (action.type) {
+
+    case "LOAD_STATE":
+      return {
+        ...action.payload.idbState
+      }
+
     case "ADD_TASK":
       return {
         ...state,
@@ -138,10 +145,43 @@ function getNextID(state: ProgramState) {
 
 function App() {
 
+  const idbLoaded = useRef(false)
+
   const [programState, dispatch] = useReducer(
     reducer,
     testData
   )
+
+  useEffect(() => {
+
+    let cancelled = false;
+
+    async function load() {
+      const persistedState = await loadState();
+      if (!cancelled && persistedState) {
+        console.log("[State recieved] : ", persistedState)
+        idbLoaded.current = true;
+        dispatch({ type: "LOAD_STATE", payload: { idbState: {...persistedState} } });
+      }
+    }
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+    
+  }, []);
+
+  useEffect(() => {
+    console.log('[Debug] programState: ', programState)
+    console.log('[Timeline]: ', programState.timeline)
+
+
+    if (idbLoaded.current) {
+      saveState(programState)
+    }
+  }, [programState])
 
   const timerRef = useRef<any>(null);
 
@@ -168,10 +208,7 @@ function App() {
   programState.playbackState.currentTask
 ]);
 
-  useEffect(() => {
-    console.log('[Debug] programState: ', programState)
-    console.log('[Timeline]: ', programState.timeline)
-  }, [programState])
+  
 
   const [currentlySelected, setCurrentlySelected] = useState<number | null>(null);
 

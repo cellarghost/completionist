@@ -73,6 +73,7 @@ export type Action =
   | { type: "INCREMENT_TIMER_100MS"; payload: any}
   | { type: "STOP_PROGRESS"; payload: any}
   | { type: "SORT_DURATION"; payload: SortOrder}
+  | { type: "LOAD_STATE"; payload: {idbState: ProgramState}}
 
 export interface TaskEditorProperties {
     isNew: boolean | null,
