@@ -6,17 +6,21 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { Box, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { StateContext } from '../../App';
+import usePlaybackTimeline from '../hooks/useTimeline';
 
-export default function PlaybackBar() {
+export default function PlaybackBar({useTimeline} : {useTimeline: any}) {
 
     const {state: programState, dispatch} = useContext(StateContext)
 
     const handleTogglePlayback = () => {
-        dispatch({type: "TOGGLE_PLAYBACK", payload: null})
+        useTimeline.togglePause()
     }
 
     const handleStop = () => {
-        dispatch({type: "STOP_PROGRESS", payload: null})
+        useTimeline.stopPlayback(
+            programState.taskMap[0] ? programState.taskMap[0].duration_ms : 0,
+            true
+        )
     }
 
     return (
@@ -28,10 +32,10 @@ export default function PlaybackBar() {
                 <SkipPreviousIcon />
             </IconButton>
             <IconButton onClick={handleTogglePlayback}>
-                {programState.playbackState.paused ? <PlayArrowIcon /> : <PauseIcon/>}
+                {(useTimeline.playbackState.isPaused == 'playing') ? <PauseIcon/> : <PlayArrowIcon />}
             </IconButton>
             <IconButton>
-                <SkipNextIcon />
+                <SkipNextIcon onClick={useTimeline.nextTask}/>
             </IconButton>
             <IconButton onClick={handleStop}>
                 <StopIcon />

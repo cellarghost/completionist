@@ -11,13 +11,17 @@ import durationFormat from "dayjs/plugin/duration";
 dayjs.extend(duration);
 dayjs.extend(durationFormat);
 
-export function TaskPreview({task, currentlySelected} : {task: Task, currentlySelected: null | number}) {
+export function TaskPreview({task, currentlySelected, useTimeline} : {task: Task, currentlySelected: null | number, useTimeline: any}) {
     
     const {state: programState, dispatch, getNextID} = useContext(StateContext);
 
     const [newTitle, setNewTitle] = useState<String | null>(task.title);
     const [newDuration_ms, setNewDuration_ms] = useState<number | null>(task.duration_ms);
     const [newDesc, setNewDesc] = useState<String| null>(task.description)
+    
+    // const [previewTitle, setPreviewTitle] = useState<String | null>(task.title);
+    // const [previewDuration, setPreviewDuration] = useState<number | null>(task.duration_ms);
+    // const [previewDesc, setPreviewDesc] = useState<String | null>(task.description);
 
     useEffect(() => {
         setNewTitle(task.title);
@@ -55,14 +59,17 @@ export function TaskPreview({task, currentlySelected} : {task: Task, currentlySe
     return (
         <Box sx={{
             borderRadius: '0.5rem',
-            border: 'solid 1px rgba(0, 0, 0, 0.03) ',
+            border: 'solid 1px rgba(255, 255, 255, 0.17) ',
             boxShadow: '2px 2px 5px rgba(0, 0, 0, 0.18)',
-            padding: '1rem',
-            bgcolor: 'rgba(110, 87, 98, 0.93)',
+            paddingTop: '0.5rem',
+            paddingRight: '1rem',
+            paddingLeft: '1rem',
+            paddingBottom: '1rem',
+            bgcolor: 'rgba(87, 100, 110, 0.06)',
             color: 'white',
         }}>
             {task && (
-                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem'}}>
+                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '0rem'}}>
                     <TextField 
                         sx={{
                                 "& .MuiInput-root": {

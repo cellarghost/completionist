@@ -1,6 +1,10 @@
 #root {
-  max-width: 1280px;
-  margin: 0 10rem 0 10rem;
+  /* max-width: 1280px; */
+  min-width: 100vw;
+}
+
+.appContent {
+  margin: 0 10vw 0 10vw;
   padding: 2rem;
 }
 

@@ -11,9 +11,11 @@ import { DndContext, DragOverlay, type DragEndEvent, type DragStartEvent } from 
 import DropTask from "./DropTask";
 import { motion } from "motion/react";
 import PlaybackBar from "./PlaybackBar";
+import { btnStyle } from "../../styles";
+import SwapVertIcon from '@mui/icons-material/SwapVert';
 
-export default function Timeline({currentlySelected, handleSelectTask} : 
-    {currentlySelected: number | null, handleSelectTask: Function}) 
+export default function Timeline({currentlySelected, handleSelectTask, useTimeline} : 
+    {currentlySelected: number | null, handleSelectTask: Function, useTimeline: any}) 
 {
 
     const [sortMenuOpen, setSortMenuOpen] = useState(false);
@@ -43,9 +45,9 @@ export default function Timeline({currentlySelected, handleSelectTask} :
     const [activeId, setActiveId] = useState<null | TaskOverlay>(null);
 
     const handleOpenTaskEdit = (isNew: boolean, tid: number | null = null) => {
-        console.log('[handleOpenTaskEdit]', programState)
+        // console.log('[handleOpenTaskEdit]', programState)
         const id : number = !(tid===null) ? tid : getNextID(programState);
-        console.log('[handleOpenTaskEdit]', tid)
+        // console.log('[handleOpenTaskEdit]', tid)
 
         setTaskEditProperties({
             isNew: isNew,
@@ -126,7 +128,7 @@ export default function Timeline({currentlySelected, handleSelectTask} :
 
         prevOpen.current = sortMenuOpen;
     }, [sortMenuOpen]);
-    
+
     return (
         <Box onMouseDown={() => {handleSelectTask(null)}}>
             <DndContext onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
@@ -134,30 +136,9 @@ export default function Timeline({currentlySelected, handleSelectTask} :
                     <Button 
                         variant="contained" 
                         onClick={() => {handleAddTask()}}
-                        sx={{
-                            bgcolor: 'rgba(80, 56, 67, 1)', 
-                            marginBottom: '0rem',
-                            fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
-                            color: 'white',
-                        }}
+                        sx={btnStyle}
                     >
-                        Add Task
-                    </Button>
-                    <Button 
-                        ref={anchorRef}
-                        variant="contained" 
-                        onClick={handleSortMenuToggle}
-                        aria-controls={sortMenuOpen ? 'composition-menu' : undefined}
-                        aria-expanded={sortMenuOpen ? 'true' : undefined}
-                        aria-haspopup="true"
-                        sx={{
-                            bgcolor: 'rgba(80, 56, 67, 1)', 
-                            marginBottom: '0rem',
-                            fontFamily: 'system-ui, Avenir, Helvetica, Arial, sans-serif',
-                            color: 'white',
-                        }}
-                    >
-                        Sort
+                        + Add Task
                     </Button>
                     <Popper
                         open={sortMenuOpen}
@@ -183,11 +164,21 @@ export default function Timeline({currentlySelected, handleSelectTask} :
                             </ClickAwayListener>
                         </Paper>
                     </Popper>
-                    <PlaybackBar />
+                    <PlaybackBar useTimeline={useTimeline}/>
+                    <Button 
+                        ref={anchorRef}
+                        variant="contained" 
+                        onClick={handleSortMenuToggle}
+                        aria-controls={sortMenuOpen ? 'composition-menu' : undefined}
+                        aria-expanded={sortMenuOpen ? 'true' : undefined}
+                        aria-haspopup="true"
+                        sx={btnStyle}
+                    >
+                        <SwapVertIcon />
+                    </Button>
                 </Box>
-                <Box sx={{display: 'flex', flexDirection: 'column', gap: '0rem', paddingTop: '1rem'}}>
+                <Box sx={{display: 'flex', flexDirection: 'column', gap: '0rem', paddingTop: '1rem', maxHeight: '75vh', overflowY: 'auto'}}>
                     {Object.keys(programState.timeline).map((str_id) => {
-                        console.log(str_id)
                         const id = Number(str_id)
                         const taskID: number = programState.timeline[id];
                         
@@ -199,6 +190,7 @@ export default function Timeline({currentlySelected, handleSelectTask} :
                                     pos={id}
                                     currentlySelected={currentlySelected}
                                     handleSelectTask={handleSelectTask}
+                                    useTimeline={useTimeline}
                                     />
                                 </DropTask>
                             </motion.div>
@@ -219,6 +211,7 @@ export default function Timeline({currentlySelected, handleSelectTask} :
                             pos={activeId.pos}
                             currentlySelected={currentlySelected}
                             handleSelectTask={handleSelectTask}
+                            useTimeline={useTimeline}
                             />
                     ): null}
                 </DragOverlay>

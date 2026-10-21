@@ -16,12 +16,13 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 
-export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelected, handleSelectTask}: { 
+export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelected, handleSelectTask, useTimeline}: { 
     task: Task, 
     handleOpenTaskEdit: Function, 
     pos: number 
     currentlySelected: number | null,
     handleSelectTask: Function,
+    useTimeline: any
 }) {
     
     // const [elapsed, setElapsed] = useState<number | null>(null)
@@ -66,12 +67,17 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
     const [isComplete, setIsComplete] = useState<boolean>(false)
 
     useEffect(() => {
-        if (state.playbackState.currentTask > pos) {
-            setIsComplete(true)
+        console.log('IS COMPLETE :: ', task.title, 'POS::', pos, 'CT::', useTimeline.playbackState.currentTask)
+        if (useTimeline.playbackState.isPaused !== 'stopped') {
+            if (useTimeline.playbackState.currentTask > pos) {
+                setIsComplete(true)
+            } else {
+                setIsComplete(false)
+            }
         } else {
-            setIsComplete(false)
+            setIsComplete(false);
         }
-    }, [state.playbackState.currentTask])
+    }, [useTimeline.playbackState.currentTask])
 
     const handleEditTask = (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.stopPropagation();
@@ -94,15 +100,15 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
             <Box>
                 <Box sx={{
                     display: 'flex',
-                    bgcolor: (currentlySelected == task.id) ? 'rgba(116, 82, 98, 1)' : 
-                    (isComplete ? 'rgba(110, 104, 107, 1)' : 'rgba(142, 105, 121, 1)'),
+                    bgcolor: (currentlySelected == task.id) ? 'rgba(130, 153, 182, 0.36)' : 
+                    (isComplete ? 'rgba(55, 139, 93, 0.45)' : 'rgba(83, 104, 131, 0.27)'),
                     flexDirection: 'column',
                     borderRadius: '0.4rem',
                     color: "white",
-                    transform: (currentlySelected == task.id) ? 'scale(1.01)' : 'scale(1)',
-                    transition: 'transform 0.2s',
                     userSelect: 'none',
                     boxShadow: (currentlySelected == task.id) ? 'inset rgba(0, 0, 0, 0.22) 0px 0px 10px' : undefined,
+                    border: (currentlySelected == task.id) ? '1px solid rgba(255, 255, 255, 0.06)' : undefined,
+                    pointerEvents: (isComplete) ? 'none' : undefined,
                     gap: 0,
                 }}
                 onMouseDown={(e) => {
@@ -116,14 +122,23 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
                         paddingBottom: '0'
                     }}>
 
-                        <div {...listeners} {...attributes} className="drag-handle"
+                        {(useTimeline.playbackState.isPaused === 'stopped') && <div {...listeners} {...attributes} className="drag-handle"
                         onMouseDown={(e) => {e.stopPropagation()}}
                         style={{
                             fontSize: 24
                         }}
                         >
                             ⠿
-                        </div>
+                        </div>}
+                        {(useTimeline.playbackState.isPaused !== 'stopped') && <div className="drag-handle"
+                        onMouseDown={(e) => {e.stopPropagation()}}
+                        style={{
+                            fontSize: 24,
+                            opacity: 0.2
+                        }}
+                        >
+                            ⠿
+                        </div>}
                         <IconButton 
                             onMouseDown={(e) => {
                                 e.stopPropagation();
@@ -150,11 +165,19 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
                             }}>
                                 <h2>{task.title}</h2>
                                 <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-                                    <IconButton onClick={handleDelete} onMouseDown={(e) => e.stopPropagation()}>
-                                        <DeleteIcon 
-                                            sx={{justifySelf: 'end'}}
-                                        />
-                                    </IconButton>
+                                    {(useTimeline.playbackState.isPaused !== 'playing') ? (
+                                        <IconButton onClick={handleDelete} onMouseDown={(e) => e.stopPropagation()}>
+                                            <DeleteIcon 
+                                                sx={{justifySelf: 'end'}}
+                                            />
+                                        </IconButton>
+                                    ) : (
+                                        <IconButton onMouseDown={(e) => e.stopPropagation()} sx={{opacity: '0.3', cursor: 'not-allowed'}}>
+                                            <DeleteIcon 
+                                                    sx={{justifySelf: 'end'}}
+                                            />
+                                        </IconButton>
+                                    )}
                                 </Box>
                             </Box>
                             <Box sx={{
@@ -167,19 +190,18 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
                             </Box>
                         </Box>
                     </Box>
-                <progress value={
-                    (state.playbackState.currentTask == taskPos) ? 
-                    Number(state.playbackState.elapsed_task) : 
-                    0
-                } max={task.duration_ms} style={{
-                    width: '100%', 
-                    margin: 0, 
-                    padding: 0, 
-                    height: '7px',
-                    border: 'none',
-                    borderRadius: '4px',
-                    backgroundColor: 'rgba(0, 0, 0, 0)'
-                    }}/>
+                    <progress max={100} value={useTimeline.playbackState.completionPct * 100
+                    } style={{
+                        width: '100%', 
+                        margin: 0, 
+                        padding: 0, 
+                        height: '7px',
+                        border: 'none',
+                        borderRadius: '4px',
+                        backgroundColor: 'rgba(0, 0, 0, 0)',
+                        opacity: (useTimeline.playbackState.currentTask === pos) ? 1 : 0
+                        }}/>
+
                 </Box>
             </Box>
         </div>

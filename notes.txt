@@ -1,7 +1,11 @@
-TODO: 1st Feb
+TODO: 4th Feb 
 
-- Add "Sort By" Button 
-- Add "Undo" feature 
+- Add top-bar 
+    - Undo / Redo 
+    - Export / Import 
+    - Clear Data 
+    
+
 
 --------------------------------------------------------------
 
