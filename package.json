@@ -21,7 +21,8 @@
     "idb": "^8.0.3",
     "motion": "^12.29.2",
     "react": "^19.2.3",
-    "react-dom": "^19.2.3"
+    "react-dom": "^19.2.3",
+    "recursive-diff": "^1.0.9"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

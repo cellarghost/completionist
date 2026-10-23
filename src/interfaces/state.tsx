@@ -1,3 +1,5 @@
+import type { UndoRedo } from "../components/hooks/useUndoRedo";
+
 export interface UserState {
     playing: boolean
     progress_ms: number 
@@ -40,7 +42,8 @@ export interface Context {
     state: ProgramState,
     dispatch: Function
     getNextID: Function,
-    timerRef:  any
+    timerRef:  any,
+    undoManager: UndoRedo
 }
 
 export interface PlaybackState {
@@ -74,6 +77,7 @@ export type Action =
   | { type: "STOP_PROGRESS"; payload: any}
   | { type: "SORT_DURATION"; payload: SortOrder}
   | { type: "LOAD_STATE"; payload: {idbState: ProgramState}}
+  | { type: "APPLY_DIFF"; payload: any}
 
 export interface TaskEditorProperties {
     isNew: boolean | null,

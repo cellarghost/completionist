@@ -3,7 +3,7 @@ import './App.css'
 import { Box } from '@mui/material'
 import Timeline from './components/Timeline/Timeline'
 import { testData } from './testData';
-import { createContext, useEffect, useReducer } from 'react';
+import { createContext, useCallback, useEffect, useReducer } from 'react';
 import { useState } from 'react';
 import type { ProgramState, Action, Context, Task } from './interfaces/state';
 import { LocalizationProvider } from '@mui/x-date-pickers';
@@ -14,18 +14,24 @@ import { useRef } from 'react';
 import { saveState, loadState } from './db';
 import ControlBar from './components/Control/ControlBar';
 import usePlaybackTimeline from './components/hooks/useTimeline';
+import type { UndoRedo } from './components/hooks/useUndoRedo';
+import useUndoRedo from './components/hooks/useUndoRedo';
 
 
 export const StateContext = createContext<Context>(null!);
 
 function reducer(state: ProgramState, action: Action) {
-
 	switch (action.type) {
+
+		case "APPLY_DIFF":
+			return {
+				...action.payload
+			};
 
 		case "LOAD_STATE":
 			return {
 				...action.payload.idbState
-			}
+			};
 
 		case "ADD_TASK":
 			return {
@@ -149,10 +155,48 @@ function App() {
 
 	const idbLoaded = useRef(false)
 
-	const [programState, dispatch] = useReducer(
+	const undoManager: UndoRedo = useUndoRedo();
+
+	const wrapReducer = (state: ProgramState, action: Action) => {
+		if (action.type === 'APPLY_DIFF') {
+			return {...action.payload};
+		}
+
+		if (action.type === 'LOAD_STATE') {
+			const result2 = reducer(state, action);
+			return result2;
+		}
+
+		console.log('WRAP ACTION :: ', action);
+
+		const prev = {...state};
+		const result = reducer(state, action);
+
+		undoManager.store_undo(prev, result);
+		return result;
+	}
+
+	const [programState, rawDispatch] = useReducer(
 		reducer,
 		testData
 	)
+
+	const stateRef = useRef(programState);
+
+	useEffect(() => { stateRef.current = programState; }, [programState]);
+
+	const NON_UNDOABLE = new Set(["LOAD_STATE", "APPLY_DIFF", "INCREMENT_TIMER_100MS",
+	"TOGGLE_PLAYBACK", "INCREMENT_TASK_NO", "STOP_PROGRESS"]);
+
+	const dispatch = useCallback((action: Action) => {
+		if (!NON_UNDOABLE.has(action.type)) {
+			const prev = stateRef.current;
+			const next = reducer(prev, action);   // safe: reducer is pure
+			undoManager.store_undo(prev, next);
+			stateRef.current = next;              // handles two dispatches before a re-render
+		}
+		rawDispatch(action);
+	}, [undoManager]);
 
 	useEffect(() => {
 
@@ -222,7 +266,7 @@ function App() {
 	return (
 		<>
 			<LocalizationProvider dateAdapter={AdapterDayjs}>
-				<StateContext.Provider value={{ state: programState, dispatch: dispatch, getNextID: getNextID, timerRef: timerRef }}>
+				<StateContext.Provider value={{ state: programState, dispatch: dispatch, getNextID: getNextID, timerRef: timerRef, undoManager: undoManager }}>
 					<ControlBar />
 					<div className='appContent'>
 						<Box sx={{
