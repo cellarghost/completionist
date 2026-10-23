@@ -6,4 +6,4 @@ My personal timer-based to-do app.
 - Add mobile-friendly styling
 - Remove legacy state-management timer code
 - Write proper unit tests
-- Clean up unused locals and ambiguous typing
+- Clean up ambiguous typing

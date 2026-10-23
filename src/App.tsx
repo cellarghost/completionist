@@ -1,11 +1,11 @@
 
-import './App.css'
-import { Box } from '@mui/material'
-import Timeline from './components/Timeline/Timeline'
+import './App.css';
+import { Box } from '@mui/material';
+import Timeline from './components/Timeline/Timeline';
 import { testData } from './testData';
 import { createContext, useCallback, useEffect, useReducer } from 'react';
 import { useState } from 'react';
-import type { ProgramState, Action, Context, Task } from './interfaces/state';
+import type { ProgramState, Action, Context } from './interfaces/state';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TaskPreview } from './components/Panel/TaskPreview';
@@ -156,25 +156,6 @@ function App() {
 	const idbLoaded = useRef(false)
 
 	const undoManager: UndoRedo = useUndoRedo();
-
-	const wrapReducer = (state: ProgramState, action: Action) => {
-		if (action.type === 'APPLY_DIFF') {
-			return {...action.payload};
-		}
-
-		if (action.type === 'LOAD_STATE') {
-			const result2 = reducer(state, action);
-			return result2;
-		}
-
-		console.log('WRAP ACTION :: ', action);
-
-		const prev = {...state};
-		const result = reducer(state, action);
-
-		undoManager.store_undo(prev, result);
-		return result;
-	}
 
 	const [programState, rawDispatch] = useReducer(
 		reducer,

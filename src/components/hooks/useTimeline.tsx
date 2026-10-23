@@ -66,7 +66,7 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
             const next_task_dur = taskMap[next_task_id].duration_ms;
             const next_task_completion = remainder_ms / next_task_dur;
             
-            setPlaybackState((prev) => {return {
+            setPlaybackState(() => {return {
                 currentTask: next_task_id,
                 currentTaskDuration: next_task_dur,
                 completionPct: next_task_completion,

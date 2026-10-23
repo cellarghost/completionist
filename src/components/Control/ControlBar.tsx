@@ -2,7 +2,6 @@ import { Box, Typography } from "@mui/material";
 import UndoIcon from '@mui/icons-material/Undo';
 import RedoIcon from '@mui/icons-material/Redo';
 import { IconButton } from "@mui/material";
-import MenuIcon from '@mui/icons-material/Menu';
 import NavMenu from "../NavMenu/NavMenu";
 import { useContext } from "react";
 import { StateContext } from "../../App";

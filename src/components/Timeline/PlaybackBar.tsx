@@ -6,11 +6,10 @@ import SkipNextIcon from '@mui/icons-material/SkipNext';
 import { Box, IconButton } from '@mui/material';
 import { useContext } from 'react';
 import { StateContext } from '../../App';
-import usePlaybackTimeline from '../hooks/useTimeline';
 
 export default function PlaybackBar({useTimeline} : {useTimeline: any}) {
 
-    const {state: programState, dispatch} = useContext(StateContext)
+    const {state: programState } = useContext(StateContext)
 
     const handleTogglePlayback = () => {
         useTimeline.togglePause()

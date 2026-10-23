@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import type { Task, TaskEditorProperties } from "../../interfaces/state";
-import { useContext, type FormEventHandler } from "react";
+import type { TaskEditorProperties } from "../../interfaces/state";
+import { useContext } from "react";
 import { TextField, Button } from "@mui/material";
 import { StateContext } from "../../App";
 import { useState } from "react";
@@ -33,8 +33,8 @@ export default function TaskEdit({handleCloseDialog, taskEditProperties}: {
     const dispatch = useContext(StateContext).dispatch;
     const [title, setTitle] = useState(taskEditProperties.title);
     const [duration_ms, setDuration_ms] = useState(taskEditProperties.duration_ms);
-    const [duration, setDuration] = useState(dayjs.duration(Number(duration_ms)).format("HH:mm:ss"));
-    const [isNew, setIsNew] = useState(taskEditProperties.isNew);
+    // const [duration, setDuration] = useState(dayjs.duration(Number(duration_ms)).format("HH:mm:ss"));
+    const [isNew, ] = useState(taskEditProperties.isNew);
 
 
     const handleChangeDurationMS = (newValue: Dayjs | null) => {

@@ -1,11 +1,11 @@
-import { Box, Button, ClickAwayListener, Menu, MenuItem, MenuList, Paper, Popper } from "@mui/material";
+import { Box, Button, ClickAwayListener, Menu, MenuItem, Paper, Popper } from "@mui/material";
 import { useEffect, useState, useRef } from "react";
 import TaskBox from "./TaskBox";
 import { StateContext } from "../../App";
 import { useContext } from "react";
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import type { SortOrder, Task, TaskEditorProperties, TaskOverlay } from "../../interfaces/state";
+import type { SortOrder, TaskEditorProperties, TaskOverlay } from "../../interfaces/state";
 import TaskEdit from "./TaskEdit";
 import { DndContext, DragOverlay, type DragEndEvent, type DragStartEvent } from "@dnd-kit/core";
 import DropTask from "./DropTask";
@@ -30,10 +30,6 @@ export default function Timeline({currentlySelected, handleSelectTask, useTimeli
 
     const [openDialog, setOpenDialog] = useState(false);
 
-    const handleClickOpenDialog = () => {
-        setOpenDialog(true);
-    };
-
     const handleCloseDialog = () => {
         setOpenDialog(false);
     };
@@ -44,22 +40,7 @@ export default function Timeline({currentlySelected, handleSelectTask, useTimeli
 
     const [activeId, setActiveId] = useState<null | TaskOverlay>(null);
 
-    const handleOpenTaskEdit = (isNew: boolean, tid: number | null = null) => {
-        // console.log('[handleOpenTaskEdit]', programState)
-        const id : number = !(tid===null) ? tid : getNextID(programState);
-        // console.log('[handleOpenTaskEdit]', tid)
-
-        setTaskEditProperties({
-            isNew: isNew,
-            id: id,
-            title: isNew ? null : programState.taskMap[id].title,
-            duration_ms: isNew ? null : programState.taskMap[id].duration_ms
-        })
-
-        setOpenDialog(true);
-    }
-
-    const [taskEditProperties, setTaskEditProperties] = useState<TaskEditorProperties>({
+    const [taskEditProperties, _] = useState<TaskEditorProperties>({
         isNew: null,
         id: null,
         title: null,
@@ -185,8 +166,7 @@ export default function Timeline({currentlySelected, handleSelectTask, useTimeli
                         return (
                             <motion.div key={taskID} layout transition={{duration: 0.25}}>
                                 <DropTask pos={id}>
-                                    <TaskBox task={programState.taskMap[taskID]} 
-                                    handleOpenTaskEdit={handleOpenTaskEdit} 
+                                    <TaskBox task={programState.taskMap[taskID]}
                                     pos={id}
                                     currentlySelected={currentlySelected}
                                     handleSelectTask={handleSelectTask}
@@ -206,8 +186,7 @@ export default function Timeline({currentlySelected, handleSelectTask, useTimeli
                 </Dialog>
                 <DragOverlay>
                     {activeId ? (
-                            <TaskBox task={programState.taskMap[activeId.taskID]} 
-                            handleOpenTaskEdit={handleOpenTaskEdit} 
+                            <TaskBox task={programState.taskMap[activeId.taskID]}
                             pos={activeId.pos}
                             currentlySelected={currentlySelected}
                             handleSelectTask={handleSelectTask}

@@ -1,19 +1,13 @@
 import type { Task } from "../../interfaces/state";
 import dayjs from "dayjs";
 import { StateContext } from "../../App";
-import { useContext, useState, useEffect } from "react";
+import { useContext } from "react";
 import { Button, Typography } from "@mui/material";
 import { btnStyle } from "../../styles";
 
 export default function TaskInProgress({task, useTimeline} : {task: Task, useTimeline: any}) {
 
-    const {state, dispatch, timerRef} = useContext(StateContext);
-
-    const [taskPos, setTaskPos] = useState<number | null>(null)
-    
-    useEffect(() => {
-        setTaskPos(state.timeline.findIndex((e) => e == task.id))
-    }, [state.timeline])
+    const {state} = useContext(StateContext);
 
     const handleNextTask = () => {
         // dispatch({type: "INCREMENT_TASK_NO", payload: null})

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
-import type { Task, TaskEditorProperties } from "../../interfaces/state";
-import { useContext, useEffect, type FormEventHandler } from "react";
-import { TextField, Button } from "@mui/material";
+import type { Task } from "../../interfaces/state";
+import { useContext, useEffect } from "react";
+import { TextField } from "@mui/material";
 import { StateContext } from "../../App";
 import { useState } from "react";
 import { TimePicker } from "@mui/x-date-pickers";
@@ -11,9 +11,9 @@ import durationFormat from "dayjs/plugin/duration";
 dayjs.extend(duration);
 dayjs.extend(durationFormat);
 
-export function TaskPreview({task, currentlySelected, useTimeline} : {task: Task, currentlySelected: null | number, useTimeline: any}) {
+export function TaskPreview({task, currentlySelected } : {task: Task, currentlySelected: null | number, useTimeline: any}) {
     
-    const {state: programState, dispatch, getNextID} = useContext(StateContext);
+    const {dispatch} = useContext(StateContext);
 
     const [newTitle, setNewTitle] = useState<String | null>(task.title);
     const [newDuration_ms, setNewDuration_ms] = useState<number | null>(task.duration_ms);

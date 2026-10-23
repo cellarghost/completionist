@@ -11,11 +11,6 @@ export default function DropTask({ pos, children } : {pos: number, children: Rea
         }
     });
 
-    const style = {
-        border: isOver ? '1px solid rgba(158, 193, 218, 1)' : undefined,
-        borderRadius: '3px'
-    };
-
     return (
         <div ref={setNodeRef} style={{
             minHeight: '0.3rem',

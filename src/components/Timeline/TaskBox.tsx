@@ -1,11 +1,10 @@
 import { Box, IconButton } from "@mui/material";
 import type { Task } from "../../interfaces/state";
-import { useEffect, useRef, useState } from "react";
-import EditIcon from '@mui/icons-material/Edit';
+import { useEffect,  useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useContext } from "react";
 import { StateContext } from "../../App";
-import dayjs, { Dayjs } from "dayjs";
+import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
 import durationFormat from "dayjs/plugin/duration";
 dayjs.extend(duration);
@@ -16,9 +15,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 
 
-export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelected, handleSelectTask, useTimeline}: { 
-    task: Task, 
-    handleOpenTaskEdit: Function, 
+export default function TaskBox({ task, pos, currentlySelected, handleSelectTask, useTimeline}: { 
+    task: Task,
     pos: number 
     currentlySelected: number | null,
     handleSelectTask: Function,
@@ -27,13 +25,13 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
     
     // const [elapsed, setElapsed] = useState<number | null>(null)
 
-    const {state, dispatch, timerRef} = useContext(StateContext);
+    const {state, dispatch} = useContext(StateContext);
 
-    const [taskPos, setTaskPos] = useState<number | null>(null)
+    // const [taskPos, setTaskPos] = useState<number | null>(null)
 
-    useEffect(() => {
-        setTaskPos(state.timeline.findIndex((e) => e == task.id))
-    }, [state.timeline])
+    // useEffect(() => {
+    //     setTaskPos(state.timeline.findIndex((e) => e == task.id))
+    // }, [state.timeline])
 
     const [collapsed, setCollapsed] = useState(true);
 
@@ -78,11 +76,6 @@ export default function TaskBox({ task, handleOpenTaskEdit, pos, currentlySelect
             setIsComplete(false);
         }
     }, [useTimeline.playbackState.currentTask])
-
-    const handleEditTask = (ev: React.MouseEvent<HTMLButtonElement>) => {
-        ev.stopPropagation();
-        handleOpenTaskEdit(false, task.id)
-    }
 
     const handleMouseDown = (ev: React.MouseEvent) => {
         ev.stopPropagation();
