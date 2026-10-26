@@ -155,7 +155,7 @@ export default function usePlaybackTimeline(taskMap: TaskMap, timeline: number[]
         // 
         if (is_paused === 'stopped') {
 
-            if (first_task_idx === null) {
+            if (timeline.length < 1) {
                 console.error('No tasks in timeline.')
                 return;
             }
@@ -167,7 +167,7 @@ export default function usePlaybackTimeline(taskMap: TaskMap, timeline: number[]
                 ...prev,
                 currentTask: timeline[0],
                 currentTimelineIdx: 0,
-                currentTaskDuration: taskMap[0].duration_ms,
+                currentTaskDuration: taskMap[timeline[0]].duration_ms,
                 taskStartTimestamp: timestamp,
                 isPaused: 'playing',
             }})
