@@ -4,6 +4,7 @@ import type { TaskMap } from "../../interfaces/state";
 type IsPaused = 'playing' | 'paused' | 'stopped';
 
 interface PlaybackState_new {
+    currentTimelineIdx: number,
     currentTask: number,
     currentTaskDuration: number,
     completionPct: number,
@@ -13,11 +14,13 @@ interface PlaybackState_new {
 }
 
 
-export default function usePlaybackTimeline(taskMap: TaskMap) {
+export default function usePlaybackTimeline(taskMap: TaskMap, timeline: number[]) {
+
+    const first_task_idx: number | null = timeline[0] || null;
 
     const get_init_taskdur = () => {
-        if (taskMap[0]) {
-            return taskMap[0].duration_ms;
+        if (first_task_idx !== null) {
+            return taskMap[first_task_idx].duration_ms;
         } else {
             return 0;
         }
@@ -25,8 +28,13 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
 
     const init_playback_state = (current_task_duration?: number, paused?: IsPaused): PlaybackState_new => {
         // const timestamp = Date.now();
+        // if (!first_task_idx) {
+        //     console.error('!! first task not set, aborting');
+        //     return {...playbackState};
+        // }
         return {
-            currentTask: 0,
+            currentTimelineIdx: 0,
+            currentTask: timeline[0],
             currentTaskDuration: current_task_duration || get_init_taskdur(),
             completionPct: 0,
             taskStartTimestamp: -1,
@@ -54,19 +62,21 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
         // console.log('CTD : ', playbackState.currentTaskDuration);
         if (diff >= playbackState.currentTaskDuration) {
 
-            if ((playbackState.currentTask + 1) > (Object.keys(taskMap).length - 1)) {
+            if ((playbackState.currentTimelineIdx + 1) > (Object.keys(taskMap).length - 1)) {
                 init_playback_state(0, 'stopped');
                 return;
             }
 
             const remainder_ms = diff - playbackState.currentTaskDuration;
             const next_taskStartTimestamp = Date.now() - remainder_ms;
-            const next_task_id = playbackState.currentTask + 1;
+            const next_task_idx = playbackState.currentTimelineIdx + 1;
+            const next_task_id = timeline[next_task_idx];
             // find the progress of next task
             const next_task_dur = taskMap[next_task_id].duration_ms;
             const next_task_completion = remainder_ms / next_task_dur;
             
             setPlaybackState(() => {return {
+                currentTimelineIdx: next_task_idx,
                 currentTask: next_task_id,
                 currentTaskDuration: next_task_dur,
                 completionPct: next_task_completion,
@@ -87,6 +97,7 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
     }
 
     useEffect(() => {
+        console.log("plbs :: ", playbackState)
 
         if (playbackState.isPaused !== 'playing') return; 
 
@@ -97,7 +108,6 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
         }, 250)
 
         return () => clearTimeout(inc);
-
     }, [playbackState])
 
     const nextTask = () => {
@@ -115,10 +125,22 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
 
         const timestamp = Date.now();
 
+        // setPlaybackState((prev) => { return {
+        //     ...prev,
+        //     currentTask: prev.currentTask + 1,
+        //     currentTaskDuration: taskMap[prev.currentTask + 1].duration_ms,
+        //     completionPct: 0,
+        //     isPaused: 'playing',
+        //     taskStartTimestamp: timestamp,
+        //     taskPauseOffset: 0,
+        //     }}
+        // )
+
         setPlaybackState((prev) => { return {
             ...prev,
-            currentTask: prev.currentTask + 1,
-            currentTaskDuration: taskMap[prev.currentTask + 1].duration_ms,
+            currentTimelineIdx: prev.currentTimelineIdx + 1,
+            currentTask: timeline[prev.currentTimelineIdx + 1],
+            currentTaskDuration: taskMap[prev.currentTimelineIdx + 1].duration_ms,
             completionPct: 0,
             isPaused: 'playing',
             taskStartTimestamp: timestamp,
@@ -133,7 +155,7 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
         // 
         if (is_paused === 'stopped') {
 
-            if (!taskMap[0]) {
+            if (first_task_idx === null) {
                 console.error('No tasks in timeline.')
                 return;
             }
@@ -143,6 +165,8 @@ export default function usePlaybackTimeline(taskMap: TaskMap) {
 
             setPlaybackState((prev) => {return {
                 ...prev,
+                currentTask: timeline[0],
+                currentTimelineIdx: 0,
                 currentTaskDuration: taskMap[0].duration_ms,
                 taskStartTimestamp: timestamp,
                 isPaused: 'playing',

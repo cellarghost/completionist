@@ -67,7 +67,7 @@ export default function TaskBox({ task, pos, currentlySelected, handleSelectTask
     useEffect(() => {
         console.log('IS COMPLETE :: ', task.title, 'POS::', pos, 'CT::', useTimeline.playbackState.currentTask)
         if (useTimeline.playbackState.isPaused !== 'stopped') {
-            if (useTimeline.playbackState.currentTask > pos) {
+            if (useTimeline.playbackState.currentTimelineIdx > pos) {
                 setIsComplete(true)
             } else {
                 setIsComplete(false)
@@ -75,7 +75,7 @@ export default function TaskBox({ task, pos, currentlySelected, handleSelectTask
         } else {
             setIsComplete(false);
         }
-    }, [useTimeline.playbackState.currentTask])
+    }, [useTimeline.playbackState.currentTimelineIdx])
 
     const handleMouseDown = (ev: React.MouseEvent) => {
         ev.stopPropagation();
@@ -192,7 +192,7 @@ export default function TaskBox({ task, pos, currentlySelected, handleSelectTask
                         border: 'none',
                         borderRadius: '4px',
                         backgroundColor: 'rgba(0, 0, 0, 0)',
-                        opacity: (useTimeline.playbackState.currentTask === pos) ? 1 : 0
+                        opacity: (useTimeline.playbackState.currentTimelineIdx === pos) ? 1 : 0
                         }}/>
 
                 </Box>

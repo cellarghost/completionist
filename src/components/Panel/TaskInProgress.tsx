@@ -24,7 +24,7 @@ export default function TaskInProgress({task, useTimeline} : {task: Task, useTim
                 ).format((useTimeline.playbackState.completionPct * task.duration_ms < 3600000) ? "mm:ss" : "HH:mm:ss")}
                 </title>
             )}
-            <h1>{task.title}</h1>
+            <Typography variant="h3" sx={{fontWeight: '800'}}>{task.title}</Typography>
             <h2>{dayjs.duration(
                 task.duration_ms - (useTimeline.playbackState.completionPct * task.duration_ms)
                 ).format("HH:mm:ss")}</h2>

@@ -242,7 +242,7 @@ function App() {
 		setCurrentlySelected(id);
 	}
 
-	const useTimeline = usePlaybackTimeline(programState.taskMap);
+	const useTimeline = usePlaybackTimeline(programState.taskMap, programState.timeline);
 
 	return (
 		<>
