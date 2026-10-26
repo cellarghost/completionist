@@ -62,7 +62,6 @@ function reducer(state: ProgramState, action: Action) {
 			};
 
 		case "MOVE_TASK":
-			console.log('[MOVE_TASK]: ', action.payload);
 			const taskInd = action.payload.startPos
 			// taskInd: 0
 			const timeline_noTask = state.timeline.toSpliced(taskInd, 1)
@@ -185,10 +184,8 @@ function App() {
 
 		async function load() {
 			const persistedState = await loadState();
-			console.log('LOAD :: ', persistedState, 'C::', cancelled);
 			idbLoaded.current = true;
 			if (!cancelled && persistedState) {
-				console.log("[State recieved] : ", persistedState)
 				dispatch({ type: "LOAD_STATE", payload: { idbState: { ...persistedState } } });
 			}
 		}
@@ -202,10 +199,7 @@ function App() {
 	}, []);
 
 	useEffect(() => {
-		console.log('[Debug] programState: ', programState)
-		console.log('[Timeline]: ', programState.timeline)
 
-		console.log("IDB LOADED :: ", idbLoaded.current);
 		if (idbLoaded.current) {
 			saveState(programState)
 		}

@@ -13,7 +13,6 @@ export default function useUndoRedo() {
 
     const store_undo = (prev: any, next: any) => {
         const undo_diff = getDiff(next, prev);
-        console.log('UNDO DIFF: ', undo_diff);
         if (undo_diff.length < 1) {
             console.error('Empty diff, aborting -');
             return;
@@ -61,10 +60,6 @@ export default function useUndoRedo() {
     }
 
     useEffect(() => {
-        console.log('UNDOREDO ::')
-        console.log(undoQueue)
-        console.log(redoQueue)
-        console.log('/////')
     }, [undoQueue, redoQueue]);
 
     return {store_undo, apply_undo, apply_redo}

@@ -48,8 +48,6 @@ export default function TaskBox({ task, pos, currentlySelected, handleSelectTask
 
     const handleDelete = (ev: React.MouseEvent<HTMLButtonElement>) => {
         ev.stopPropagation();
-        console.log('[handleDelete]: ', task)
-        console.log('[state]', state)
         try {
             dispatch({
                 type: "REMOVE_TASK",
@@ -58,14 +56,12 @@ export default function TaskBox({ task, pos, currentlySelected, handleSelectTask
         }
         catch(e) {
             console.error(e)
-            console.log(state)
         }
     }
 
     const [isComplete, setIsComplete] = useState<boolean>(false)
 
     useEffect(() => {
-        console.log('IS COMPLETE :: ', task.title, 'POS::', pos, 'CT::', useTimeline.playbackState.currentTask)
         if (useTimeline.playbackState.isPaused !== 'stopped') {
             if (useTimeline.playbackState.currentTimelineIdx > pos) {
                 setIsComplete(true)

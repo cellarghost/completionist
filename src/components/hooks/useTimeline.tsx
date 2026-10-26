@@ -97,7 +97,6 @@ export default function usePlaybackTimeline(taskMap: TaskMap, timeline: number[]
     }
 
     useEffect(() => {
-        console.log("plbs :: ", playbackState)
 
         if (playbackState.isPaused !== 'playing') return; 
 
@@ -111,11 +110,6 @@ export default function usePlaybackTimeline(taskMap: TaskMap, timeline: number[]
     }, [playbackState])
 
     const nextTask = () => {
-
-        console.log('NEXT TASK::')
-        console.log('PBS: ', playbackState)
-        console.log('TSKMP: ', taskMap)
-        console.log('TSKMP LEN: ', Object.keys(taskMap).length)
 
         if ((playbackState.currentTask + 1) > (Object.keys(taskMap).length - 1)) {
             console.log('TASKS FINISHED - STOPPING')
@@ -140,7 +134,7 @@ export default function usePlaybackTimeline(taskMap: TaskMap, timeline: number[]
             ...prev,
             currentTimelineIdx: prev.currentTimelineIdx + 1,
             currentTask: timeline[prev.currentTimelineIdx + 1],
-            currentTaskDuration: taskMap[prev.currentTimelineIdx + 1].duration_ms,
+            currentTaskDuration: taskMap[timeline[prev.currentTimelineIdx + 1]].duration_ms,
             completionPct: 0,
             isPaused: 'playing',
             taskStartTimestamp: timestamp,

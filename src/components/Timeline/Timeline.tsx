@@ -69,12 +69,10 @@ export default function Timeline({currentlySelected, handleSelectTask, useTimeli
     }
 
     const handleDragEnd = (e: DragEndEvent) => {
-        console.log('[handleDragEnd] : ', e)
         const taskID = e.active.id;
         const moveTo = e.over?.data.current?.pos;
 
         if (!(moveTo == null)) {
-            console.log('yup')
             const startPos = e.active.data.current?.pos;
             dispatch({type: "MOVE_TASK", payload: {
                 taskID: taskID,

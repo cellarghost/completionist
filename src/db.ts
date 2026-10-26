@@ -9,7 +9,6 @@ const dbPromise = openDB("todo-db", 1, {
 export async function saveState(state: any) {
   const db = await dbPromise;
   await db.put("state", state, "app");
-  console.log("SAVESTATE ::", state);
 }
 
 export async function loadState() {
